@@ -1,0 +1,204 @@
+<!-- 
+This file defines the nodes that are internal to the application. The format of such nodes is:
+
+<Node>
+	<Type>Type of the node as stored in the XML file of a BT. Must be specified.</Type>
+	<ReadableType>Type of the node as displayed by the application. Must be specified.</ReadableType>
+	<Children>Number of children of the node. Can be either "I" or a non-negative number. "I" means "1 or more children". Must be specified.</Children>
+	<Icon>Path of the icon of the node. Must be specified.</Icon>
+</Node>
+
+If the node has parameters, it can include another child, <Parameters></Parameters>, which includes <Parameter/> elements.
+A <Parameter/> element has several attributes:
+
+- name: name of the attribute. This attribute must be specified.
+- type: type of tha attribute, that is, what kind of value the attribute stores. Valid types are those specified in
+the ParameterType enum (located in the ConceptualBTNode class). This attribute must be specified.
+- contextable: this attribute must be specified, and tells if the attribute can or cannot be read from the context. Currently,
+this attribute is false by default in all standard tasks (tasks read from MMPM files do have contextable parameters), since
+the execution model implemented in JBT does not support them (which could be improved in the future). Values for this 
+attribute are "true" or "false".
+- nodeTypes: in case "type" is "NODE_ID", then this parameter specifies the types of the node identified by the parameter.
+Its value can be either an empty list (any sequence of blank spaces, or even ""), in which case any type is allowed, or a list of types separated by blank spaces (e.g., 
+"Interrupter Sequence Parallel").
+
+Nodes can be organized in categories. A Category element can contain both categories and nodes, and it has an attribute
+"name" that must be specified. The "name" is the name of the category that is displayed in the application. 
+
+<Category name="Category name">
+	<Category name="Subcategory">
+		...
+	</Category>
+
+	<Node>
+		...
+	</Node>
+	...
+</Category>
+
+NOTE THAT THE ROOT OF THE XML FILE MUST BE A Category ELEMENT.
+-->
+
+<Category name="Standard nodes">
+	<Category name="Composite">
+		<Node>
+			<Type>Sequence</Type>
+			<ReadableType>Sequence</ReadableType>
+			<Children>I</Children>
+			<Icon>icons/sequence.png</Icon>
+		</Node>
+		<Node>
+			<Type>Selector</Type>
+			<ReadableType>Selector</ReadableType>
+			<Children>I</Children>
+			<Icon>icons/selector.png</Icon>
+		</Node>
+		<Node>
+			<Type>Parallel</Type>
+			<ReadableType>Parallel</ReadableType>
+			<Parameters>
+				<Parameter name="policy" type="PARALLEL_POLICY" contextable="false"/>
+			</Parameters>
+			<Children>I</Children>
+			<Icon>icons/parallel.png</Icon>
+		</Node>
+		<Node>
+			<Type>RandomSelector</Type>
+			<ReadableType>Random Selector</ReadableType>
+			<Children>I</Children>
+			<Icon>icons/randomSelector.png</Icon>
+		</Node>
+		<Node>
+			<Type>RandomSequence</Type>
+			<ReadableType>Random Sequence</ReadableType>
+			<Children>I</Children>
+			<Icon>icons/randomSequence.png</Icon>
+		</Node>
+		<Node>
+			<Type>StaticPriorityList</Type>
+			<ReadableType>Static Priority List</ReadableType>
+			<Children>I</Children>
+			<Icon>icons/staticPriorityList.png</Icon>
+		</Node>
+		<Node>
+			<Type>DynamicPriorityList</Type>
+			<ReadableType>Dynamic Priority List</ReadableType>
+			<Children>I</Children>
+			<Icon>icons/dynamicPriorityList.png</Icon>
+		</Node>
+	</Category>
+	<Category name="Decorator">
+		<Node>
+			<Type>HierarchicalContextManager</Type>
+			<ReadableType>Hierarchical Context Manager</ReadableType>
+			<Children>1</Children>
+			<Icon>icons/hierarchicalContextManager.png</Icon>
+		</Node>
+		<Node>
+			<Type>SafeOutputContextManager</Type>
+			<Parameters>
+				<Parameter name="listOfVariables" type="LIST_OF_VARIABLES" contextable="false"/>
+			</Parameters>
+			<ReadableType>Safe Output Context Manager</ReadableType>
+			<Children>1</Children>
+			<Icon>icons/safeOutputContextManager.png</Icon>
+		</Node>
+		<Node>
+			<Type>SafeContextManager</Type>
+			<ReadableType>Safe Context Manager</ReadableType>
+			<Children>1</Children>
+			<Icon>icons/safeContextManager.png</Icon>
+		</Node>
+		<Node>
+			<Type>Interrupter</Type>
+			<ReadableType>Interrupter</ReadableType>
+			<Children>1</Children>
+			<Icon>icons/interrupter.png</Icon>
+		</Node>
+		<Node>
+			<Type>Inverter</Type>
+			<ReadableType>Inverter</ReadableType>
+			<Children>1</Children>
+			<Icon>icons/inverter.png</Icon>
+		</Node>
+		<Node>
+			<Type>Limit</Type>
+			<ReadableType>Limit</ReadableType>
+			<Children>1</Children>
+			<Parameters>
+				<Parameter name="runs" type="INTEGER" contextable="false"/>
+			</Parameters>
+			<Icon>icons/limit.png</Icon>
+		</Node>
+		<Node>
+			<Type>Repeat</Type>
+			<ReadableType>Repeat</ReadableType>
+			<Children>1</Children>
+			<Icon>icons/repeat.png</Icon>
+		</Node>
+		<Node>
+			<Type>UntilFail</Type>
+			<ReadableType>Until Fail</ReadableType>
+			<Children>1</Children>
+			<Icon>icons/untilFail.png</Icon>
+		</Node>
+		<Node>
+			<Type>Succeeder</Type>
+			<ReadableType>Succeeder</ReadableType>
+			<Children>1</Children>
+			<Icon>icons/succeeder.png</Icon>
+		</Node>
+	</Category>
+	<Category name="Leaf">
+		<Node>
+			<Type>Wait</Type>
+			<ReadableType>Wait</ReadableType>
+			<Children>0</Children>
+			<Parameters>
+				<Parameter name="duration" type="INTEGER" contextable="false"/>
+			</Parameters>
+			<Icon>icons/wait.png</Icon>
+		</Node>
+		<Node>
+			<Type>SubtreeLookup</Type>
+			<ReadableType>Subtree Lookup</ReadableType>
+			<Children>0</Children>
+			<Parameters>
+				<Parameter name="subtreeName" type="STRING"/>
+			</Parameters>
+			<Icon>icons/subtreeLookup.png</Icon>
+		</Node>
+		<Node>
+			<Type>PerformInterruption</Type>
+			<ReadableType>Perform Interruption</ReadableType>
+			<Children>0</Children>
+			<Parameters>
+				<Parameter name="expectedResult" type="STATUS_CODE" contextable="false"></Parameter>
+				<Parameter name="nodeID" type="NODE_ID" nodetypes="Interrupter" contextable="false"></Parameter>
+			</Parameters>
+			<Icon>icons/performInterruption.png</Icon>
+		</Node>
+		<Node>
+			<Type>VariableRenamer</Type>
+			<ReadableType>Variable Renamer</ReadableType>
+			<Children>0</Children>
+			<Parameters>
+				<Parameter name="variableName" type="STRING" contextable="false"/>
+				<Parameter name="newVariableName" type="STRING" contextable="false"/>
+			</Parameters>
+			<Icon>icons/variableRenamer.png</Icon>
+		</Node>
+		<Node>
+			<Type>Success</Type>
+			<ReadableType>Success</ReadableType>
+			<Children>0</Children>
+			<Icon>icons/success.png</Icon>
+		</Node>
+		<Node>
+			<Type>Failure</Type>
+			<ReadableType>Failure</ReadableType>
+			<Children>0</Children>
+			<Icon>icons/failure.png</Icon>
+		</Node>
+	</Category>
+</Category>

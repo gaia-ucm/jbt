@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BT Editor
+Bundle-SymbolicName: jbt.tools.bteditor; singleton:=true
+Bundle-Version: 0.0.2
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.ui.forms;bundle-version="3.5.0"
+Bundle-Activator: jbt.tools.bteditor.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ libs/jdom.jar,
+ libs/mmpm.jar

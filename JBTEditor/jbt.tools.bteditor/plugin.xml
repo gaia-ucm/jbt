@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="jbt.tools.bteditor.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="RCP Perspective"
+            class="jbt.tools.bteditor.Perspective"
+            id="jbt.tools.bteditor.perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="jbt.tools.bteditor.views.NodesNavigator"
+            icon="icons/nodesNavigator.png"
+            id="jbt.tools.bteditor.views.NodesNavigator"
+            name="Nodes Navigator"
+            restorable="true">
+      </view>
+      <view
+            class="jbt.tools.bteditor.views.NodeInfo"
+            icon="icons/info.png"
+            id="jbt.tools.bteditor.views.NodeInfo"
+            name="Node Info"
+            restorable="true">
+      </view>
+      <view
+            class="jbt.tools.bteditor.views.NodesSearcher"
+            icon="icons/search.png"
+            id="jbt.tools.bteditor.views.NodesSearcher"
+            name="Nodes Searcher"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="jbt.tools.bteditor.editor.BTEditor"
+            default="false"
+            icon="icons/BT.png"
+            id="jbt.tools.bteditor.editor.BTEditor"
+            name="BT Editor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            id="jbt.tools.bteditor.editor.BTEditorContribution"
+            targetID="jbt.tools.bteditor.editor.BTEditor">
+         <action
+               class="jbt.tools.bteditor.actions.CollapseTreeAction"
+               icon="icons/collapseTree.png"
+               id="jbt.tools.bteditor.actions.CollapseTreeAction"
+               label="Collapse Tree"
+               style="push"
+               toolbarPath="Normal"
+               tooltip="Collapses all the nodes of the active behaviour tree">
+         </action>
+         <action
+               class="jbt.tools.bteditor.actions.ExpandTreeAction"
+               icon="icons/expandTree.png"
+               id="jbt.tools.bteditor.actions.ExpandTreeAction"
+               label="Expand Tree"
+               style="push"
+               toolbarPath="Normal"
+               tooltip="Expands all the nodes of the active behaviour tree">
+         </action>
+         <action
+               class="jbt.tools.bteditor.actions.ClearErrorsAction"
+               icon="icons/clearErrors.png"
+               id="jbt.tools.bteditor.actions.ClearErrorsAction"
+               label="Clear Errors"
+               style="push"
+               toolbarPath="Normal"
+               tooltip="Clear the errors of the active behaviour tree">
+         </action>
+         <action
+               class="jbt.tools.bteditor.actions.CheckErrorsAction"
+               icon="icons/checkBT.png"
+               id="jbt.tools.bteditor.actions.CheckErrorsAction"
+               label="Check Errors"
+               style="push"
+               toolbarPath="Normal"
+               tooltip="Checks for errors in the active behavior tree">
+         </action>
+      </editorContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.ui.file.save"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="jbt.tools.bteditor.defaultScheme"
+            sequence="Ctrl+S">
+      </key>
+      <scheme
+            id="jbt.tools.bteditor.defaultScheme"
+            name="Default Scheme">
+      </scheme>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="jbt.tools.bteditor.application"
+            name="JBT Editor">
+         <property
+               name="appName"
+               value="JBT Editor">
+         </property>
+         <property
+               name="aboutText"
+               value="JBT Editor&#x0A;&#x0A;JBT Editor is an RCP application for defining behaviour trees in a standard XML format.&#x0A;&#x0A;(c) Copyright Ricardo Juan Palma Durán 2010.  All rights reserved.&#x0A;&#x0A;Credits:&#x0A;&#x0A;Icons: iconspedia (http://www.iconspedia.com/) and icons at Wikimedia Commons (http://commons.wikimedia.org/wiki/Category:Icons).">
+         </property>
+         <property
+               name="aboutImage"
+               value="icons/jbt.png">
+         </property>
+         <property
+               name="windowImages"
+               value="icons/jbt16.png,icons/jbt32.png,icons/jbt48.png,icons/jbt64.png,icons/jbt128.png">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="jbt.tools.bteditor.DisableNewEditorHandler"
+            commandId="org.eclipse.ui.window.newEditor">
+         <enabledWhen>
+            <count
+                  value="*">
+            </count></enabledWhen>
+         <activeWhen>
+            <count
+                  value="*">
+            </count>
+         </activeWhen>
+      </handler>
+   </extension>
+
+</plugin>

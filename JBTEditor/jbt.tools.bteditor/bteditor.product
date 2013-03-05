@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="JBT Editor" id="jbt.tools.bteditor.product" application="jbt.tools.bteditor.application" version="0.0.2" useFeatures="true" includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="/jbt.tools.bteditor/icons/jbt.png"/>
+      <text>
+         JBT Editor
+
+JBT Editor is an RCP application for defining behaviour trees in a standard XML format.
+
+(c) Copyright Ricardo Juan Palma Durán 2010.  All rights reserved.
+
+Credits:
+
+Icons: iconspedia (http://www.iconspedia.com/) and icons at Wikimedia Commons (http://commons.wikimedia.org/wiki/Category:Icons).
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgs>-Xmx1024M</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="/jbt.tools.bteditor/icons/jbt16.png" i32="/jbt.tools.bteditor/icons/jbt32.png" i48="/jbt.tools.bteditor/icons/jbt48.png" i64="/jbt.tools.bteditor/icons/jbt64.png" i128="/jbt.tools.bteditor/icons/jbt128.png"/>
+
+   <launcher name="JBTEditor">
+      <linux icon="/jbt.tools.bteditor/icons/jbt.xpm"/>
+      <macosx icon="/jbt.tools.bteditor/icons/jbt.icns"/>
+      <solaris/>
+      <win useIco="true">
+         <ico path="/jbt.tools.bteditor/icons/jbt.ico"/>
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
+
+   <plugins>
+      <plugin id="com.ibm.icu"/>
+      <plugin id="javax.servlet"/>
+      <plugin id="jbt.tools.bteditor"/>
+      <plugin id="org.eclipse.core.commands"/>
+      <plugin id="org.eclipse.core.contenttype"/>
+      <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.databinding.observable"/>
+      <plugin id="org.eclipse.core.databinding.property"/>
+      <plugin id="org.eclipse.core.expressions"/>
+      <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.runtime"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
+      <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.help"/>
+      <plugin id="org.eclipse.jface"/>
+      <plugin id="org.eclipse.jface.databinding"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.eclipse.swt"/>
+      <plugin id="org.eclipse.swt.gtk.linux.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.ui"/>
+      <plugin id="org.eclipse.ui.workbench"/>
+   </plugins>
+
+   <features>
+      <feature id="jbt.tools.bteditor.feature" version="0.0.1"/>
+   </features>
+
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+   </configurations>
+
+</product>
