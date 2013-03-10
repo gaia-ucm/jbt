@@ -33,3 +33,12 @@ Directories structure
 ./JBTEditor: contains the JBT Editor, a GUI application that lets the user define behaviour trees and export them into XML files that are easily handled by JBT. When creating behaviour trees, the user should use this application. This is an Eclipse RCP application, so Eclipse SDK must be used to run it. In order to run the application, just open the file "bteditor.product" with the "Product Configuration Editor" (right click on the file, then "Open With -> Product Configuration Editor"), and in the "Overview" page, click on "Launch an Eclipse application".
 
 ./UserGuide: contains the user's guide. It also contains the source code of the user's guide, which is written in Latex. Images are in several formats, including ODG.
+
+*******************
+Binary distribution
+*******************
+
+If you just want to get the compiled version of JBT or its documentation, go to our SourceForge download page:
+
+https://sourceforge.net/projects/jbt/files/?source=navbar
+
