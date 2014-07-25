@@ -26,7 +26,7 @@ import jbt.tools.bteditor.model.ConceptualBTNode.ParameterType;
 
 /**
  * A BT represents a behaviour tree that can be edited, loaded and exported.
- * This type of trees is edited in the {@link BTEditor_}. A BT only stores the
+ * This type of trees is edited in the {@link BTEditor}. A BT only stores the
  * root of the tree, which is a {@link BTNode} .
  * 
  * @author Ricardo Juan Palma Durán

@@ -24,7 +24,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 /**
- * EditorInput for a {@link BTEditor_}.
+ * EditorInput for a {@link BTEditor}.
  * <p>
  * The BTEditorInput is used when creating a new BTEditor. It contains the name
  * of the tree and several fields that indicate where the tree comes from.

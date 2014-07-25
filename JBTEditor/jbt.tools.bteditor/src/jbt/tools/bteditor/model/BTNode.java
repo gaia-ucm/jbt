@@ -28,7 +28,7 @@ import jbt.tools.bteditor.model.ConceptualBTNode.NodeInternalType;
 import jbt.tools.bteditor.model.ConceptualBTNode.ParameterType;
 
 /**
- * The node of a behaviour tree that can be edited by the {@link BTEditor_}.
+ * The node of a behaviour tree that can be edited by the {@link BTEditor}.
  * These are the nodes that a {@link BT} is composed of.
  * <p>
  * A BTNode stores a list with the parameters of the node and their value. It
