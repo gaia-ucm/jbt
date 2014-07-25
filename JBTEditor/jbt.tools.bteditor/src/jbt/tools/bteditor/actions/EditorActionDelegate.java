@@ -20,19 +20,19 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 
 public abstract class EditorActionDelegate implements IEditorActionDelegate {
-	private IEditorPart editor;
-	private IAction accion;
+    private IEditorPart editor;
+    private IAction accion;
 
-	public void setActiveEditor(IAction action, IEditorPart targetEditor){
-		this.editor = targetEditor;
-		this.accion = action;
-	}
+    public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+	this.editor = targetEditor;
+	this.accion = action;
+    }
 
-	public IEditorPart getEditor(){
-		return this.editor;
-	}
+    public IEditorPart getEditor() {
+	return this.editor;
+    }
 
-	public IAction getAction(){
-		return this.accion;
-	}
+    public IAction getAction() {
+	return this.accion;
+    }
 }

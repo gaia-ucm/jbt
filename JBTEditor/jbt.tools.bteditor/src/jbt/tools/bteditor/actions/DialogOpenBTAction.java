@@ -38,65 +38,66 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * 
  */
 public class DialogOpenBTAction extends Action implements IWorkbenchAction {
-	private IWorkbenchWindow window;
+    private IWorkbenchWindow window;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param window the main window.
+    /**
+     * Constructor.
+     * 
+     * @param window
+     *            the main window.
+     */
+    public DialogOpenBTAction(IWorkbenchWindow window) {
+	this.window = window;
+	this.setText("Open BT");
+	this.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+		Application.PLUGIN_ID, IconsPaths.OPEN_BT));
+    }
+
+    /**
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    public void run() {
+	/*
+	 * Open dialog for asking the user to enter some file names.
 	 */
-	public DialogOpenBTAction(IWorkbenchWindow window) {
-		this.window = window;
-		this.setText("Open BT");
-		this.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				Application.PLUGIN_ID, IconsPaths.OPEN_BT));
-	}
+	FileDialog dialog = new FileDialog(this.window.getShell(), SWT.MULTI);
+	String[] individualFilters = Extensions
+		.getFiltersFromExtensions(Extensions.getBTFileExtensions());
+	String[] unifiedFilter = new String[] { Extensions
+		.getUnifiedFilterFromExtensions(Extensions
+			.getBTFileExtensions()) };
+	String[] filtersToUse = Extensions.joinArrays(individualFilters,
+		unifiedFilter);
+	dialog.setFilterExtensions(filtersToUse);
+	dialog.setText("Open BT");
 
-	/**
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
+	/*
+	 * If the user has selected at least one file name, we must open it.
+	 * Note that the user may select several files.
 	 */
-	public void run() {
-		/*
-		 * Open dialog for asking the user to enter some file names.
-		 */
-		FileDialog dialog = new FileDialog(this.window.getShell(), SWT.MULTI);
-		String[] individualFilters = Extensions
-				.getFiltersFromExtensions(Extensions.getBTFileExtensions());
-		String[] unifiedFilter = new String[] { Extensions
-				.getUnifiedFilterFromExtensions(Extensions
-						.getBTFileExtensions()) };
-		String[] filtersToUse = Extensions.joinArrays(individualFilters,
-				unifiedFilter);
-		dialog.setFilterExtensions(filtersToUse);
-		dialog.setText("Open BT");
+	if (dialog.open() != null) {
+	    /* Get the name of the files (NOT absolute path). */
+	    String[] singleNames = dialog.getFileNames();
 
-		/*
-		 * If the user has selected at least one file name, we must open it.
-		 * Note that the user may select several files.
-		 */
-		if (dialog.open() != null) {
-			/* Get the name of the files (NOT absolute path). */
-			String[] singleNames = dialog.getFileNames();
+	    /*
+	     * This vector will store the absolute path of every single selected
+	     * file.
+	     */
+	    Vector<String> absolutePath = new Vector<String>();
 
-			/*
-			 * This vector will store the absolute path of every single selected
-			 * file.
-			 */
-			Vector<String> absolutePath = new Vector<String>();
+	    for (int i = 0, n = singleNames.length; i < n; i++) {
+		StringBuffer buffer = new StringBuffer(dialog.getFilterPath());
+		if (buffer.charAt(buffer.length() - 1) != File.separatorChar)
+		    buffer.append(File.separatorChar);
+		buffer.append(singleNames[i]);
+		absolutePath.add(buffer.toString());
+	    }
 
-			for (int i = 0, n = singleNames.length; i < n; i++) {
-				StringBuffer buffer = new StringBuffer(dialog.getFilterPath());
-				if (buffer.charAt(buffer.length() - 1) != File.separatorChar)
-					buffer.append(File.separatorChar);
-				buffer.append(singleNames[i]);
-				absolutePath.add(buffer.toString());
-			}
-
-			new OpenBTAction(absolutePath).run();
-		}
+	    new OpenBTAction(absolutePath).run();
 	}
+    }
 
-	public void dispose() {
-	}
+    public void dispose() {
+    }
 }

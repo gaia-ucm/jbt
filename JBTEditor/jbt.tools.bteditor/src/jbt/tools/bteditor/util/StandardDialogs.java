@@ -30,49 +30,56 @@ import org.eclipse.swt.SWT;
  * 
  */
 public class StandardDialogs {
-	/*
-	 * Private constructor.
-	 */
-	private StandardDialogs() {}
+    /*
+     * Private constructor.
+     */
+    private StandardDialogs() {
+    }
 
-	public static void informationDialog(String title, String informationMessage) {
-		MessageDialog.openInformation(null, title, informationMessage);
-	}
+    public static void informationDialog(String title, String informationMessage) {
+	MessageDialog.openInformation(null, title, informationMessage);
+    }
 
-	public static void errorDialog(String title, String errorMessage) {
-		MessageDialog.openError(null, title, errorMessage);
-	}
+    public static void errorDialog(String title, String errorMessage) {
+	MessageDialog.openError(null, title, errorMessage);
+    }
 
-	public static void exceptionDialog(String title, String errorMessage, Exception e) {
-		DetailsDialog dialog = new DetailsDialog(title, errorMessage,
-				Utilities.stackTraceToString(e), DetailsDialog.ERROR, null, SWT.APPLICATION_MODAL
-						| SWT.RESIZE | SWT.MIN | SWT.MAX | SWT.CLOSE);
-		dialog.setBlockOnOpen(true);
-		dialog.open();
-	}
+    public static void exceptionDialog(String title, String errorMessage,
+	    Exception e) {
+	DetailsDialog dialog = new DetailsDialog(title, errorMessage,
+		Utilities.stackTraceToString(e), DetailsDialog.ERROR, null,
+		SWT.APPLICATION_MODAL | SWT.RESIZE | SWT.MIN | SWT.MAX
+			| SWT.CLOSE);
+	dialog.setBlockOnOpen(true);
+	dialog.open();
+    }
 
-	public static void exceptionDialog(String title, String errorMessage, List<Exception> exceptions) {
-		String exceptionMessage = new String();
-		for (Exception currentException : exceptions) {
-			exceptionMessage += "** Exception **\n\n"
-					+ Utilities.stackTraceToString(currentException) + "\n\n";
-		}
-		DetailsDialog dialog=new DetailsDialog(title, errorMessage, exceptionMessage, DetailsDialog.ERROR, null,
-				SWT.APPLICATION_MODAL | SWT.RESIZE | SWT.MIN | SWT.MAX | SWT.CLOSE);
-		
-		dialog.setBlockOnOpen(true);
-		dialog.open();
+    public static void exceptionDialog(String title, String errorMessage,
+	    List<Exception> exceptions) {
+	String exceptionMessage = new String();
+	for (Exception currentException : exceptions) {
+	    exceptionMessage += "** Exception **\n\n"
+		    + Utilities.stackTraceToString(currentException) + "\n\n";
 	}
+	DetailsDialog dialog = new DetailsDialog(title, errorMessage,
+		exceptionMessage, DetailsDialog.ERROR, null,
+		SWT.APPLICATION_MODAL | SWT.RESIZE | SWT.MIN | SWT.MAX
+			| SWT.CLOSE);
 
-	public static void warningDialog(String title, String warningMessage) {
-		MessageDialog.openWarning(null, title, warningMessage);
-	}
+	dialog.setBlockOnOpen(true);
+	dialog.open();
+    }
 
-	public static boolean confirmationDialog(String title, String confirmationMessage) {
-		return MessageDialog.openConfirm(null, title, confirmationMessage);
-	}
+    public static void warningDialog(String title, String warningMessage) {
+	MessageDialog.openWarning(null, title, warningMessage);
+    }
 
-	public static boolean questionDialog(String title, String question) {
-		return MessageDialog.openQuestion(null, title, question);
-	}
+    public static boolean confirmationDialog(String title,
+	    String confirmationMessage) {
+	return MessageDialog.openConfirm(null, title, confirmationMessage);
+    }
+
+    public static boolean questionDialog(String title, String question) {
+	return MessageDialog.openQuestion(null, title, question);
+    }
 }

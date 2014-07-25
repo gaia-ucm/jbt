@@ -35,38 +35,38 @@ import org.eclipse.ui.PlatformUI;
  * 
  */
 public class OpenBTAction extends Action {
-	/** Names of the files that contain the trees to open. */
-	private Vector<String> fileNames;
+    /** Names of the files that contain the trees to open. */
+    private Vector<String> fileNames;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param fileNames
-	 *            names of the files that contain the trees to open.
-	 */
-	public OpenBTAction(Vector<String> fileNames) {
-		this.fileNames = fileNames;
+    /**
+     * Constructor.
+     * 
+     * @param fileNames
+     *            names of the files that contain the trees to open.
+     */
+    public OpenBTAction(Vector<String> fileNames) {
+	this.fileNames = fileNames;
+    }
+
+    public void run() {
+	IWorkbenchPage activePage = PlatformUI.getWorkbench()
+		.getWorkbenchWindows()[0].getActivePage();
+
+	Vector<Exception> exceptions = new Vector<Exception>();
+
+	for (String fileName : this.fileNames) {
+	    BTEditorInput editorInput = new BTEditorInput(fileName, true, false);
+
+	    try {
+		activePage.openEditor(editorInput, BTEditor.ID);
+	    } catch (PartInitException e) {
+		exceptions.add(e);
+	    }
 	}
 
-	public void run() {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench()
-				.getWorkbenchWindows()[0].getActivePage();
-		
-		Vector<Exception> exceptions=new Vector<Exception>();
-
-		for (String fileName : this.fileNames) {
-			BTEditorInput editorInput = new BTEditorInput(fileName, true, false);
-
-			try {
-				activePage.openEditor(editorInput, BTEditor.ID);
-			} catch (PartInitException e) {
-				exceptions.add(e);
-			}
-		}
-		
-		if(exceptions.size()!=0){
-			StandardDialogs.exceptionDialog("Error opening tree",
-					"There was an error when opening the tree", exceptions);
-		}
+	if (exceptions.size() != 0) {
+	    StandardDialogs.exceptionDialog("Error opening tree",
+		    "There was an error when opening the tree", exceptions);
 	}
+    }
 }

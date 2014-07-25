@@ -29,33 +29,33 @@ import org.eclipse.jface.action.Action;
  * 
  */
 public class ExportToCppAction extends Action {
-	/** The tree to save. */
-	private BT btToSave;
-	/** The name of the file where the tree must be saved. */
-	private String fileName;
+    /** The tree to save. */
+    private BT btToSave;
+    /** The name of the file where the tree must be saved. */
+    private String fileName;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param tree
-	 *            the tree to save.
-	 * @param fileName
-	 *            the name of the file where the tree is going to be saved.
-	 */
-	public ExportToCppAction(BT tree, String fileName) {
-		this.btToSave = tree;
-		this.fileName = fileName;
-	}
+    /**
+     * Constructor.
+     * 
+     * @param tree
+     *            the tree to save.
+     * @param fileName
+     *            the name of the file where the tree is going to be saved.
+     */
+    public ExportToCppAction(BT tree, String fileName) {
+	this.btToSave = tree;
+	this.fileName = fileName;
+    }
 
-	/**
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	public void run(){
-		try {
-			BTCPPManager.export(this.btToSave, this.fileName);
-		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
-		}
+    /**
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    public void run() {
+	try {
+	    BTCPPManager.export(this.btToSave, this.fileName);
+	} catch (IOException e) {
+	    throw new RuntimeException(e.getMessage());
 	}
+    }
 }

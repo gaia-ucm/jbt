@@ -23,31 +23,31 @@ package jbt.tools.bteditor.editor;
  * 
  */
 public class BTEditorIDGenerator {
-	/** The only instance of this class. */
-	private static BTEditorIDGenerator instance;
-	/** Counter for generated IDs. */
-	private long counter = 0;
+    /** The only instance of this class. */
+    private static BTEditorIDGenerator instance;
+    /** Counter for generated IDs. */
+    private long counter = 0;
 
-	/**
-	 * Returns the only instance of BTEditorIDGenerator.
-	 */
-	public static BTEditorIDGenerator getInstance() {
-		if (instance == null) {
-			instance = new BTEditorIDGenerator();
-		}
-		return instance;
+    /**
+     * Returns the only instance of BTEditorIDGenerator.
+     */
+    public static BTEditorIDGenerator getInstance() {
+	if (instance == null) {
+	    instance = new BTEditorIDGenerator();
 	}
+	return instance;
+    }
 
-	/**
-	 * Returns the next BTEditor ID.
-	 */
-	public long getNextID() {
-		return this.counter++;
-	}
+    /**
+     * Returns the next BTEditor ID.
+     */
+    public long getNextID() {
+	return this.counter++;
+    }
 
-	/**
-	 * Private constructor to force the singleton pattern.
-	 */
-	private BTEditorIDGenerator() {
-	}
+    /**
+     * Private constructor to force the singleton pattern.
+     */
+    private BTEditorIDGenerator() {
+    }
 }

@@ -34,30 +34,31 @@ import org.eclipse.ui.part.ViewPart;
  * 
  */
 public class NodeInfo extends ViewPart {
-	public static String ID = "jbt.tools.bteditor.views.NodeInfo";
-	private NodeInfoViewer nodeInfoViewer;
+    public static String ID = "jbt.tools.bteditor.views.NodeInfo";
+    private NodeInfoViewer nodeInfoViewer;
 
-	public void createPartControl(Composite parent) {
-		this.nodeInfoViewer = new NodeInfoViewer(parent, SWT.NONE);
+    public void createPartControl(Composite parent) {
+	this.nodeInfoViewer = new NodeInfoViewer(parent, SWT.NONE);
 
-		/* Initialize view's content with the currently selected node. */
-		BTEditor activeBTEditor = Utilities.getActiveBTEditor();
+	/* Initialize view's content with the currently selected node. */
+	BTEditor activeBTEditor = Utilities.getActiveBTEditor();
 
-		if (activeBTEditor != null) {
-			List<BTNode> selectedElements = activeBTEditor.getSelectedElements();
-			if (selectedElements.size() != 0) {
-				this.nodeInfoViewer.setNode(selectedElements.get(0));
-			}
-		}
+	if (activeBTEditor != null) {
+	    List<BTNode> selectedElements = activeBTEditor
+		    .getSelectedElements();
+	    if (selectedElements.size() != 0) {
+		this.nodeInfoViewer.setNode(selectedElements.get(0));
+	    }
 	}
+    }
 
-	public void setFocus() {
-	}
+    public void setFocus() {
+    }
 
-	/**
-	 * Sets the node whose information is being displayed.
-	 */
-	public void setNode(BTNode node) {
-		this.nodeInfoViewer.setNode(node);
-	}
+    /**
+     * Sets the node whose information is being displayed.
+     */
+    public void setNode(BTNode node) {
+	this.nodeInfoViewer.setNode(node);
+    }
 }

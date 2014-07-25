@@ -37,73 +37,74 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
-	private IWorkbenchWindow window;
+    private IWorkbenchWindow window;
 
-	private IWorkbenchAction openBTAction;
-	private Action newBTAction;
-	private IWorkbenchAction saveBTAction;
-	private IWorkbenchAction saveBTAsAction;
-	private IWorkbenchAction loadMMPMDomainAction;
-	private IWorkbenchAction aboutAction;
-	private IWorkbenchAction exportAsCppAction;
+    private IWorkbenchAction openBTAction;
+    private Action newBTAction;
+    private IWorkbenchAction saveBTAction;
+    private IWorkbenchAction saveBTAsAction;
+    private IWorkbenchAction loadMMPMDomainAction;
+    private IWorkbenchAction aboutAction;
+    private IWorkbenchAction exportAsCppAction;
 
-	private IContributionItem viewsList;
+    private IContributionItem viewsList;
 
-	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
-		super(configurer);
-	}
+    public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
+	super(configurer);
+    }
 
-	protected void makeActions(IWorkbenchWindow window) {
-		this.window = window;
+    protected void makeActions(IWorkbenchWindow window) {
+	this.window = window;
 
-		this.saveBTAction = ActionFactory.SAVE.create(this.window);
-		this.saveBTAsAction = ActionFactory.SAVE_AS.create(this.window);
-		this.exportAsCppAction = new DialogExportAsCppAction(this.window);
-		this.openBTAction = new DialogOpenBTAction(this.window);
-		this.newBTAction = new NewBTAction();
-		this.loadMMPMDomainAction = new DialogLoadMMPMDomainAction(this.window);
-		this.viewsList = ContributionItemFactory.VIEWS_SHORTLIST.create(this.window);
-		this.aboutAction = ActionFactory.ABOUT.create(this.window);
+	this.saveBTAction = ActionFactory.SAVE.create(this.window);
+	this.saveBTAsAction = ActionFactory.SAVE_AS.create(this.window);
+	this.exportAsCppAction = new DialogExportAsCppAction(this.window);
+	this.openBTAction = new DialogOpenBTAction(this.window);
+	this.newBTAction = new NewBTAction();
+	this.loadMMPMDomainAction = new DialogLoadMMPMDomainAction(this.window);
+	this.viewsList = ContributionItemFactory.VIEWS_SHORTLIST
+		.create(this.window);
+	this.aboutAction = ActionFactory.ABOUT.create(this.window);
 
-		/* For key bindings and for copy and paste actions... */
-		this.register(this.saveBTAction);
-		this.register(ActionFactory.COPY.create(this.window));
-		this.register(ActionFactory.PASTE.create(this.window));
-	}
+	/* For key bindings and for copy and paste actions... */
+	this.register(this.saveBTAction);
+	this.register(ActionFactory.COPY.create(this.window));
+	this.register(ActionFactory.PASTE.create(this.window));
+    }
 
-	protected void fillMenuBar(IMenuManager menuBar) {
-		MenuManager fileMenu = new MenuManager("File");
-		MenuManager viewMenu = new MenuManager("View");
-		MenuManager helpMenu = new MenuManager("Help");
+    protected void fillMenuBar(IMenuManager menuBar) {
+	MenuManager fileMenu = new MenuManager("File");
+	MenuManager viewMenu = new MenuManager("View");
+	MenuManager helpMenu = new MenuManager("Help");
 
-		MenuManager showViewMenu = new MenuManager("Show view");
+	MenuManager showViewMenu = new MenuManager("Show view");
 
-		fileMenu.add(this.newBTAction);
-		fileMenu.add(this.openBTAction);
-		fileMenu.add(this.saveBTAction);
-		fileMenu.add(this.saveBTAsAction);
-		fileMenu.add(this.exportAsCppAction);
-		fileMenu.add(this.loadMMPMDomainAction);
+	fileMenu.add(this.newBTAction);
+	fileMenu.add(this.openBTAction);
+	fileMenu.add(this.saveBTAction);
+	fileMenu.add(this.saveBTAsAction);
+	fileMenu.add(this.exportAsCppAction);
+	fileMenu.add(this.loadMMPMDomainAction);
 
-		showViewMenu.add(this.viewsList);
-		viewMenu.add(showViewMenu);
+	showViewMenu.add(this.viewsList);
+	viewMenu.add(showViewMenu);
 
-		helpMenu.add(this.aboutAction);
+	helpMenu.add(this.aboutAction);
 
-		menuBar.add(fileMenu);
-		menuBar.add(viewMenu);
-		menuBar.add(helpMenu);
-	}
+	menuBar.add(fileMenu);
+	menuBar.add(viewMenu);
+	menuBar.add(helpMenu);
+    }
 
-	protected void fillCoolBar(ICoolBarManager coolBar) {
-		IToolBarManager firstCoolBar = new ToolBarManager(coolBar.getStyle());
-		coolBar.add(firstCoolBar);
-		firstCoolBar.add(this.newBTAction);
-		firstCoolBar.add(this.saveBTAction);
-		firstCoolBar.add(this.saveBTAsAction);
-		firstCoolBar.add(this.exportAsCppAction);
-		firstCoolBar.add(this.openBTAction);
-		firstCoolBar.add(this.loadMMPMDomainAction);
-		coolBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-	}
+    protected void fillCoolBar(ICoolBarManager coolBar) {
+	IToolBarManager firstCoolBar = new ToolBarManager(coolBar.getStyle());
+	coolBar.add(firstCoolBar);
+	firstCoolBar.add(this.newBTAction);
+	firstCoolBar.add(this.saveBTAction);
+	firstCoolBar.add(this.saveBTAsAction);
+	firstCoolBar.add(this.exportAsCppAction);
+	firstCoolBar.add(this.openBTAction);
+	firstCoolBar.add(this.loadMMPMDomainAction);
+	coolBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+    }
 }

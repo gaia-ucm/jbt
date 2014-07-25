@@ -21,15 +21,15 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 
 public class ClearErrorsAction extends EditorActionDelegate {
-	public ClearErrorsAction(){
-		super();
-	}
-	
-	public void run(IAction action) {
-		BTEditor editor = (BTEditor) this.getEditor();
-		editor.clearErrors();
-	}
+    public ClearErrorsAction() {
+	super();
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+    public void run(IAction action) {
+	BTEditor editor = (BTEditor) this.getEditor();
+	editor.clearErrors();
+    }
+
+    public void selectionChanged(IAction action, ISelection selection) {
+    }
 }

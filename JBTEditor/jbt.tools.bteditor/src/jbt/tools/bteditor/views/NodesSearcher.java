@@ -63,251 +63,259 @@ import org.eclipse.ui.part.ViewPart;
  * 
  */
 public class NodesSearcher extends ViewPart {
-	public static String ID = "jbt.tools.bteditor.views.NodesSearcher";
+    public static String ID = "jbt.tools.bteditor.views.NodesSearcher";
 
-	/** Composite that stores all the widget that this ViewPart displays. */
-	private Composite global;
-	/** TableViewer that displays the search results. */
-	private TableViewer resultsTable;
-	/** The result of the search. It stores a set of BTNode identifiers. */
-	private List<Identifier> searchResult;
-	/**
-	 * Text field where the user inputs the identifier or the partial identifier
-	 * of the node.
+    /** Composite that stores all the widget that this ViewPart displays. */
+    private Composite global;
+    /** TableViewer that displays the search results. */
+    private TableViewer resultsTable;
+    /** The result of the search. It stores a set of BTNode identifiers. */
+    private List<Identifier> searchResult;
+    /**
+     * Text field where the user inputs the identifier or the partial identifier
+     * of the node.
+     */
+    private Text searchTextField;
+    /** BTEditor whose BT was the target of the search. */
+    private BTEditor targetEditor;
+    /**
+     * Label that displays the name of the BTEditor whose BT was the target of
+     * the search.
+     */
+    private Label targetEditorName;
+
+    /**
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+     */
+    public void createPartControl(Composite parent) {
+	this.searchResult = new Vector<Identifier>();
+
+	/* Initialize the global composite. */
+	this.global = new Composite(parent, SWT.NONE);
+	GridLayout layout = new GridLayout(1, false);
+	layout.marginHeight = 0;
+	layout.marginWidth = 0;
+	this.global.setLayout(layout);
+
+	/*
+	 * Create the top part of the composite (the part containing the search
+	 * text field and the search button.
 	 */
-	private Text searchTextField;
-	/** BTEditor whose BT was the target of the search. */
-	private BTEditor targetEditor;
-	/**
-	 * Label that displays the name of the BTEditor whose BT was the target of
-	 * the search.
+	createTopComposite(this.global);
+	/*
+	 * Create the bottom part of the composite (the part containing the
+	 * search result).
 	 */
-	private Label targetEditorName;
+	createBottomComposite(this.global);
+    }
 
-	/**
-	 * 
-	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+    /**
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
+     */
+    public void setFocus() {
+    }
+
+    /**
+     * Creates the Composite that contains the result of the search. The
+     * Composite contains the {@link #resultsTable} element.
+     * 
+     * @param parent
+     *            the Composite where the created Composite will be placed.
+     */
+    private void createBottomComposite(Composite parent) {
+	this.resultsTable = new TableViewer(parent, SWT.SINGLE | SWT.BORDER);
+	this.resultsTable.getTable().setLayoutData(
+		new GridData(SWT.FILL, SWT.FILL, true, true));
+	this.resultsTable.setLabelProvider(new ResultsTableLabelProvider());
+	this.resultsTable.setContentProvider(new ResultsTableContentProvider());
+	this.resultsTable.setInput(this.searchResult);
+
+	/* Sort elements by its String representation. */
+	this.resultsTable.setSorter(new ViewerSorter());
+
+	/*
+	 * Listener that will select the node in the target BTEditor and which
+	 * also activates the target BTEditor.
 	 */
-	public void createPartControl(Composite parent) {
-		this.searchResult = new Vector<Identifier>();
+	this.resultsTable
+		.addSelectionChangedListener(new ISelectionChangedListener() {
+		    public void selectionChanged(SelectionChangedEvent event) {
+			ISelection selection = event.getSelection();
 
-		/* Initialize the global composite. */
-		this.global = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout(1, false);
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		this.global.setLayout(layout);
-
-		/*
-		 * Create the top part of the composite (the part containing the search
-		 * text field and the search button.
-		 */
-		createTopComposite(this.global);
-		/*
-		 * Create the bottom part of the composite (the part containing the
-		 * search result).
-		 */
-		createBottomComposite(this.global);
-	}
-
-	/**
-	 * 
-	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-	 */
-	public void setFocus() {
-	}
-
-	/**
-	 * Creates the Composite that contains the result of the search. The
-	 * Composite contains the {@link #resultsTable} element.
-	 * 
-	 * @param parent
-	 *            the Composite where the created Composite will be placed.
-	 */
-	private void createBottomComposite(Composite parent) {
-		this.resultsTable = new TableViewer(parent, SWT.SINGLE | SWT.BORDER);
-		this.resultsTable.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		this.resultsTable.setLabelProvider(new ResultsTableLabelProvider());
-		this.resultsTable.setContentProvider(new ResultsTableContentProvider());
-		this.resultsTable.setInput(this.searchResult);
-
-		/* Sort elements by its String representation. */
-		this.resultsTable.setSorter(new ViewerSorter());
-
-		/*
-		 * Listener that will select the node in the target BTEditor and which
-		 * also activates the target BTEditor.
-		 */
-		this.resultsTable.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				ISelection selection = event.getSelection();
-
-				if (!selection.isEmpty()) {
-					Identifier selectedNode = (Identifier) ((IStructuredSelection) selection)
-							.getFirstElement();
-					targetEditor.selectNode(selectedNode);
-					Utilities.activateEditor(targetEditor);
-				}
+			if (!selection.isEmpty()) {
+			    Identifier selectedNode = (Identifier) ((IStructuredSelection) selection)
+				    .getFirstElement();
+			    targetEditor.selectNode(selectedNode);
+			    Utilities.activateEditor(targetEditor);
 			}
+		    }
 		});
 
-		this.targetEditorName = new Label(parent, SWT.NONE);
-		this.targetEditorName.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+	this.targetEditorName = new Label(parent, SWT.NONE);
+	this.targetEditorName.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
+		true, false));
+    }
+
+    /**
+     * Creates the Composite that shows the search text field and the search
+     * button.
+     * 
+     * @param parent
+     *            the Composite where the created Composite will be placed.
+     */
+    private void createTopComposite(Composite parent) {
+	Composite searchComposite = new Composite(parent, SWT.NONE);
+	searchComposite.setLayout(new GridLayout(3, false));
+
+	searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
+		false));
+
+	Label label = new Label(searchComposite, SWT.NONE);
+	label.setText("Node ID:");
+	label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	this.searchTextField = createTextField(searchComposite);
+	createSearchButton(searchComposite);
+    }
+
+    /**
+     * Creates the search Button.
+     * 
+     * @param parent
+     *            the Composite where the Button is placed.
+     */
+    private void createSearchButton(Composite parent) {
+	Button button = new Button(parent, SWT.PUSH);
+	button.setText("Search");
+	button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+
+	/* When clicked, the button performs the search. */
+	button.addSelectionListener(new SelectionAdapter() {
+	    public void widgetSelected(SelectionEvent e) {
+		String searchText = searchTextField.getText();
+		performSearch(searchText);
+	    }
+	});
+    }
+
+    /**
+     * Creates the search text field (Text).
+     * 
+     * @param parent
+     *            the Composite where the text field is placed.
+     * @return the text field.
+     */
+    private Text createTextField(Composite parent) {
+	final Text textField = new Text(parent, SWT.BORDER);
+
+	textField
+		.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+	/* If "enter" is pressed, perform the search. */
+	textField.addKeyListener(new KeyAdapter() {
+	    public void keyPressed(KeyEvent e) {
+		if (e.keyCode == SWT.CR) {
+		    performSearch(textField.getText());
+		}
+	    }
+	});
+
+	return textField;
+    }
+
+    /**
+     * Label provider for the search results table (
+     * {@link NodesSearcher#resultsTable}).
+     * 
+     * @author Ricardo Juan Palma Durán
+     * 
+     */
+    private class ResultsTableLabelProvider implements ITableLabelProvider {
+	public void addListener(ILabelProviderListener listener) {
 	}
 
-	/**
-	 * Creates the Composite that shows the search text field and the search
-	 * button.
-	 * 
-	 * @param parent
-	 *            the Composite where the created Composite will be placed.
-	 */
-	private void createTopComposite(Composite parent) {
-		Composite searchComposite = new Composite(parent, SWT.NONE);
-		searchComposite.setLayout(new GridLayout(3, false));
-
-		searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-
-		Label label = new Label(searchComposite, SWT.NONE);
-		label.setText("Node ID:");
-		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-		this.searchTextField = createTextField(searchComposite);
-		createSearchButton(searchComposite);
+	public void dispose() {
 	}
 
-	/**
-	 * Creates the search Button.
-	 * 
-	 * @param parent
-	 *            the Composite where the Button is placed.
-	 */
-	private void createSearchButton(Composite parent) {
-		Button button = new Button(parent, SWT.PUSH);
-		button.setText("Search");
-		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-
-		/* When clicked, the button performs the search. */
-		button.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				String searchText = searchTextField.getText();
-				performSearch(searchText);
-			}
-		});
+	public boolean isLabelProperty(Object element, String property) {
+	    return false;
 	}
 
-	/**
-	 * Creates the search text field (Text).
-	 * 
-	 * @param parent
-	 *            the Composite where the text field is placed.
-	 * @return the text field.
-	 */
-	private Text createTextField(Composite parent) {
-		final Text textField = new Text(parent, SWT.BORDER);
-
-		textField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-		/* If "enter" is pressed, perform the search. */
-		textField.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				if (e.keyCode == SWT.CR) {
-					performSearch(textField.getText());
-				}
-			}
-		});
-
-		return textField;
+	public void removeListener(ILabelProviderListener listener) {
 	}
 
-	/**
-	 * Label provider for the search results table (
-	 * {@link NodesSearcher#resultsTable}).
-	 * 
-	 * @author Ricardo Juan Palma Durán
-	 * 
-	 */
-	private class ResultsTableLabelProvider implements ITableLabelProvider {
-		public void addListener(ILabelProviderListener listener) {
-		}
-
-		public void dispose() {
-		}
-
-		public boolean isLabelProperty(Object element, String property) {
-			return false;
-		}
-
-		public void removeListener(ILabelProviderListener listener) {
-		}
-
-		public Image getColumnImage(Object element, int columnIndex) {
-			return null;
-		}
-
-		public String getColumnText(Object element, int columnIndex) {
-			return ((Identifier) element).toString();
-		}
+	public Image getColumnImage(Object element, int columnIndex) {
+	    return null;
 	}
 
-	/**
-	 * Content provider for the search results table (
-	 * {@link NodesSearcher#resultsTable}).
-	 * 
-	 * @author Ricardo Juan Palma Durán
-	 * 
-	 */
-	private class ResultsTableContentProvider implements IStructuredContentProvider {
-		public void dispose() {
+	public String getColumnText(Object element, int columnIndex) {
+	    return ((Identifier) element).toString();
+	}
+    }
 
-		}
+    /**
+     * Content provider for the search results table (
+     * {@link NodesSearcher#resultsTable}).
+     * 
+     * @author Ricardo Juan Palma Durán
+     * 
+     */
+    private class ResultsTableContentProvider implements
+	    IStructuredContentProvider {
+	public void dispose() {
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-
-		}
-
-		public Object[] getElements(Object inputElement) {
-			return ((List) inputElement).toArray();
-		}
 	}
 
-	/**
-	 * Given the search text, this method searches, in the BT of the currently
-	 * active BTEditor, those nodes whose ID contains <code>text</code>,
-	 * ignoring case. It stores, in {@link NodesSearcher#searchResult}, the set
-	 * of nodes with a matching ID. Also it updates the
-	 * {@link NodesSearcher#resultsTable} and
-	 * {@link NodesSearcher#targetEditorName} fields.
-	 * 
-	 * @param text
-	 *            the search text.
-	 */
-	private void performSearch(String text) {
-		BTEditor activeEditor = Utilities.getActiveBTEditor();
-		this.searchResult.clear();
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
-		if (activeEditor != null) {
-			this.targetEditor = activeEditor;
-			BT currentBT = activeEditor.getBT();
-			searchNode(text, this.searchResult, currentBT.getRoot());
-			this.targetEditorName.setText("Searched in: " + this.targetEditor.getTitle());
-		}
-
-		this.global.layout();
-		this.resultsTable.refresh();
 	}
 
-	/**
-	 * Method that recursivelly perform the search, starting from
-	 * <code>currentNode</code>. If stores in <code>foundNodes</code> the
-	 * matching nodes. <code>text</code> is the search text.
-	 */
-	private void searchNode(String text, List<Identifier> foundNodes, BTNode currentNode) {
-		if (currentNode.getID().toString().toLowerCase().contains(text)) {
-			foundNodes.add(currentNode.getID());
-		}
-
-		for (BTNode child : currentNode.getChildren()) {
-			searchNode(text, foundNodes, child);
-		}
+	public Object[] getElements(Object inputElement) {
+	    return ((List) inputElement).toArray();
 	}
+    }
+
+    /**
+     * Given the search text, this method searches, in the BT of the currently
+     * active BTEditor, those nodes whose ID contains <code>text</code>,
+     * ignoring case. It stores, in {@link NodesSearcher#searchResult}, the set
+     * of nodes with a matching ID. Also it updates the
+     * {@link NodesSearcher#resultsTable} and
+     * {@link NodesSearcher#targetEditorName} fields.
+     * 
+     * @param text
+     *            the search text.
+     */
+    private void performSearch(String text) {
+	BTEditor activeEditor = Utilities.getActiveBTEditor();
+	this.searchResult.clear();
+
+	if (activeEditor != null) {
+	    this.targetEditor = activeEditor;
+	    BT currentBT = activeEditor.getBT();
+	    searchNode(text, this.searchResult, currentBT.getRoot());
+	    this.targetEditorName.setText("Searched in: "
+		    + this.targetEditor.getTitle());
+	}
+
+	this.global.layout();
+	this.resultsTable.refresh();
+    }
+
+    /**
+     * Method that recursivelly perform the search, starting from
+     * <code>currentNode</code>. If stores in <code>foundNodes</code> the
+     * matching nodes. <code>text</code> is the search text.
+     */
+    private void searchNode(String text, List<Identifier> foundNodes,
+	    BTNode currentNode) {
+	if (currentNode.getID().toString().toLowerCase().contains(text)) {
+	    foundNodes.add(currentNode.getID());
+	}
+
+	for (BTNode child : currentNode.getChildren()) {
+	    searchNode(text, foundNodes, child);
+	}
+    }
 }

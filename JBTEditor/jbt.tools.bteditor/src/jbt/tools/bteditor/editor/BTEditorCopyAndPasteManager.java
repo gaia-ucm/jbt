@@ -34,52 +34,52 @@ import jbt.tools.bteditor.model.BTNode;
  * 
  */
 public class BTEditorCopyAndPasteManager {
-	/** The only instance of BTEditorCopyAndPasteManager. */
-	private static BTEditorCopyAndPasteManager instance;
-	/** The BTNode that has been copied. */
-	private BTNode copiedBranch;
+    /** The only instance of BTEditorCopyAndPasteManager. */
+    private static BTEditorCopyAndPasteManager instance;
+    /** The BTNode that has been copied. */
+    private BTNode copiedBranch;
 
-	/**
-	 * Copies the node <code>branchToCopy</code>. This makes the
-	 * BTEditorCopyAndPasteManager store a copy (by calling
-	 * {@link BTNode#clone()}) of <code>branchToCopy</code>. From then on,
-	 * {@link #paste()} will return a copy of the copy created by this method.
-	 */
-	public void copy(BTNode branchToCopy) {
-		this.copiedBranch = branchToCopy.clone();
+    /**
+     * Copies the node <code>branchToCopy</code>. This makes the
+     * BTEditorCopyAndPasteManager store a copy (by calling
+     * {@link BTNode#clone()}) of <code>branchToCopy</code>. From then on,
+     * {@link #paste()} will return a copy of the copy created by this method.
+     */
+    public void copy(BTNode branchToCopy) {
+	this.copiedBranch = branchToCopy.clone();
+    }
+
+    /**
+     * This method can be called only after {@link #copy(BTNode)} has been
+     * called. This method returns a copy (by invoking {@link BTNode#clone()})
+     * of the node that was copied by {@link #copy(BTNode)}.
+     */
+    public BTNode paste() {
+	return this.copiedBranch.clone();
+    }
+
+    /**
+     * Returns the only instance of BTEditorCopyAndPasteManager.
+     */
+    public static BTEditorCopyAndPasteManager getInstance() {
+	if (instance == null) {
+	    instance = new BTEditorCopyAndPasteManager();
 	}
 
-	/**
-	 * This method can be called only after {@link #copy(BTNode)} has been
-	 * called. This method returns a copy (by invoking {@link BTNode#clone()})
-	 * of the node that was copied by {@link #copy(BTNode)}.
-	 */
-	public BTNode paste() {
-		return this.copiedBranch.clone();
-	}
+	return instance;
+    }
 
-	/**
-	 * Returns the only instance of BTEditorCopyAndPasteManager.
-	 */
-	public static BTEditorCopyAndPasteManager getInstance() {
-		if (instance == null) {
-			instance = new BTEditorCopyAndPasteManager();
-		}
+    /**
+     * Returns true if a {@link #copy(BTNode)} operation has been made, or false
+     * if not.
+     */
+    public boolean hasCopy() {
+	return this.copiedBranch != null;
+    }
 
-		return instance;
-	}
-
-	/**
-	 * Returns true if a {@link #copy(BTNode)} operation has been made, or false
-	 * if not.
-	 */
-	public boolean hasCopy() {
-		return this.copiedBranch != null;
-	}
-
-	/**
-	 * Private constructor to force the singleton pattern.
-	 */
-	private BTEditorCopyAndPasteManager() {
-	}
+    /**
+     * Private constructor to force the singleton pattern.
+     */
+    private BTEditorCopyAndPasteManager() {
+    }
 }

@@ -27,89 +27,89 @@ import java.io.Serializable;
  *            type of the second element of the pair.
  */
 public class Pair<T, S> implements Serializable {
-	private static final long serialVersionUID = 1L;
-	/*
-	 * First element of the pair.
-	 */
-	private T first;
-	/*
-	 * Second element of the pair.
-	 */
-	private S second;
+    private static final long serialVersionUID = 1L;
+    /*
+     * First element of the pair.
+     */
+    private T first;
+    /*
+     * Second element of the pair.
+     */
+    private S second;
 
-	/**
-	 * Constructs a Pair.
-	 * 
-	 * @param f
-	 *            first element of the pair.
-	 * @param s
-	 *            second element of the pair.
-	 */
-	public Pair(T f, S s) {
-		first = f;
-		second = s;
-	}
+    /**
+     * Constructs a Pair.
+     * 
+     * @param f
+     *            first element of the pair.
+     * @param s
+     *            second element of the pair.
+     */
+    public Pair(T f, S s) {
+	first = f;
+	second = s;
+    }
 
-	/**
-	 * Returns the first element of the pair.
-	 * 
-	 * @return the first element of the pair.
-	 */
-	public T getFirst() {
-		return first;
-	}
+    /**
+     * Returns the first element of the pair.
+     * 
+     * @return the first element of the pair.
+     */
+    public T getFirst() {
+	return first;
+    }
 
-	/**
-	 * Returns the second element of the pair.
-	 * 
-	 * @return the second element of the pair.
-	 */
-	public S getSecond() {
-		return second;
-	}
+    /**
+     * Returns the second element of the pair.
+     * 
+     * @return the second element of the pair.
+     */
+    public S getSecond() {
+	return second;
+    }
 
-	/**
-	 * Sets the value of the first element of the pair.
-	 * 
-	 * @param f
-	 *            value for the first element of the pair.
-	 */
-	public void setFirst(T f) {
-		first = f;
-	}
+    /**
+     * Sets the value of the first element of the pair.
+     * 
+     * @param f
+     *            value for the first element of the pair.
+     */
+    public void setFirst(T f) {
+	first = f;
+    }
 
-	/**
-	 * Sets the value of the second element of the pair.
-	 * 
-	 * @param s
-	 *            value for the second element of the pair.
-	 */
-	public void setSecond(S s) {
-		second = s;
-	}
+    /**
+     * Sets the value of the second element of the pair.
+     * 
+     * @param s
+     *            value for the second element of the pair.
+     */
+    public void setSecond(S s) {
+	second = s;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return "(" + first.toString() + ", " + second.toString() + ")";
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+	return "(" + first.toString() + ", " + second.toString() + ")";
+    }
+
+    public boolean equals(Object o) {
+	if (this == o)
+	    return true;
+
+	if (o instanceof Pair) {
+	    return first.equals(((Pair) o).first)
+		    && second.equals(((Pair) o).second);
+	} else {
+	    return false;
 	}
-	
-	public boolean equals(Object o){
-		if(this==o)
-			return true;
-		
-		if(o instanceof Pair){
-			return first.equals(((Pair)o).first) && second.equals(((Pair)o).second); 
-		}
-		else{
-			return false;
-		}
-	}
-	
-	public int hashCode(){
-		return first.hashCode()+second.hashCode();
-	}
+    }
+
+    public int hashCode() {
+	return first.hashCode() + second.hashCode();
+    }
 }

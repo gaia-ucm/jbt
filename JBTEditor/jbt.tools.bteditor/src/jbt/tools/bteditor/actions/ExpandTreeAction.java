@@ -21,11 +21,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 
 public class ExpandTreeAction extends EditorActionDelegate {
-	public void run(IAction action) {
-		((BTEditor)this.getEditor()).expandTree(true);
-	}
+    public void run(IAction action) {
+	((BTEditor) this.getEditor()).expandTree(true);
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
+    public void selectionChanged(IAction action, ISelection selection) {
 
-	}
+    }
 }

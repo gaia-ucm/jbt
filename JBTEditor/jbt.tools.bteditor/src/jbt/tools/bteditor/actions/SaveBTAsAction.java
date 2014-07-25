@@ -36,69 +36,72 @@ import org.eclipse.ui.PlatformUI;
  * saving process also fails, and an exception is thrown.
  */
 public class SaveBTAsAction extends Action {
-	/** The tree to save. */
-	private BT tree;
-	/** The file where the tree will be stored. */
-	private String selectedFile;
-	/** The file name that is initially displayed in the file dialog. */
-	private String initialFileName;
+    /** The tree to save. */
+    private BT tree;
+    /** The file where the tree will be stored. */
+    private String selectedFile;
+    /** The file name that is initially displayed in the file dialog. */
+    private String initialFileName;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param tree
-	 *            tree to save.
-	 * @param initialFileNAme
-	 *            the file name that is initially displayed in the file dialog.
-	 */
-	public SaveBTAsAction(BT tree, String initialFileName) {
-		this.tree = tree;
-		this.initialFileName = initialFileName;
-	}
+    /**
+     * Constructor.
+     * 
+     * @param tree
+     *            tree to save.
+     * @param initialFileNAme
+     *            the file name that is initially displayed in the file dialog.
+     */
+    public SaveBTAsAction(BT tree, String initialFileName) {
+	this.tree = tree;
+	this.initialFileName = initialFileName;
+    }
 
-	/**
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	public void run() {
-		FileDialog dialog = new FileDialog(
-				PlatformUI.getWorkbench().getWorkbenchWindows()[0].getShell(), SWT.SAVE);
-		
-		dialog.setOverwrite(true);
-		dialog.setFilterExtensions(Extensions.getFiltersFromExtensions(Extensions
-				.getBTFileExtensions()));
-		dialog.setText("Save BT as");
-		dialog.setFileName(this.initialFileName);
-		
-		String fileName = dialog.open();
+    /**
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    public void run() {
+	FileDialog dialog = new FileDialog(PlatformUI.getWorkbench()
+		.getWorkbenchWindows()[0].getShell(), SWT.SAVE);
 
-		if (fileName != null) {
-			List<BTEditor> editors = Utilities.getBTEditors();
+	dialog.setOverwrite(true);
+	dialog.setFilterExtensions(Extensions
+		.getFiltersFromExtensions(Extensions.getBTFileExtensions()));
+	dialog.setText("Save BT as");
+	dialog.setFileName(this.initialFileName);
 
-			for (BTEditor editor : editors) {
-				BTEditorInput editorInput = (BTEditorInput) editor.getEditorInput();
-				if (editorInput.isFromFile() && editorInput.getTreeName().equals(fileName)) {
-					throw new RuntimeException(
-							"There is a behaviour tree already open with the same name ("
-									+ fileName + "). Close it first.");
-				}
-			}
+	String fileName = dialog.open();
 
-			String targetFileName = Extensions.joinFileNameAndExtension(fileName,
-					Extensions.getBTFileExtensions()[dialog.getFilterIndex()]);
+	if (fileName != null) {
+	    List<BTEditor> editors = Utilities.getBTEditors();
 
-			new SaveBTAction(this.tree, targetFileName).run();
-
-			this.selectedFile = targetFileName;
+	    for (BTEditor editor : editors) {
+		BTEditorInput editorInput = (BTEditorInput) editor
+			.getEditorInput();
+		if (editorInput.isFromFile()
+			&& editorInput.getTreeName().equals(fileName)) {
+		    throw new RuntimeException(
+			    "There is a behaviour tree already open with the same name ("
+				    + fileName + "). Close it first.");
 		}
-	}
+	    }
 
-	/**
-	 * Returns the name of the file where the tree has been stored. Returns null
-	 * if the tree could not be saved or if {@link #run()} has not been called
-	 * yet.
-	 */
-	public String getSelectedFile() {
-		return this.selectedFile;
+	    String targetFileName = Extensions.joinFileNameAndExtension(
+		    fileName,
+		    Extensions.getBTFileExtensions()[dialog.getFilterIndex()]);
+
+	    new SaveBTAction(this.tree, targetFileName).run();
+
+	    this.selectedFile = targetFileName;
 	}
+    }
+
+    /**
+     * Returns the name of the file where the tree has been stored. Returns null
+     * if the tree could not be saved or if {@link #run()} has not been called
+     * yet.
+     */
+    public String getSelectedFile() {
+	return this.selectedFile;
+    }
 }

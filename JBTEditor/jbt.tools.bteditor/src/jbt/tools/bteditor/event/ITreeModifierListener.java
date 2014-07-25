@@ -25,8 +25,8 @@ import jbt.tools.bteditor.model.BT;
  * 
  */
 public interface ITreeModifierListener {
-	/**
-	 * Called when a change in the BT that is being listened occurs.
-	 */
-	public void treeModified(TreeModifiedEvent event);
+    /**
+     * Called when a change in the BT that is being listened occurs.
+     */
+    public void treeModified(TreeModifiedEvent event);
 }

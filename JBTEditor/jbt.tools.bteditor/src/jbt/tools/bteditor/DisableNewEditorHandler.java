@@ -27,15 +27,15 @@ import org.eclipse.core.commands.ExecutionException;
  * 
  */
 public class DisableNewEditorHandler extends AbstractHandler {
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		return null;
-	}
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+	return null;
+    }
 
-	public boolean isEnabled() {
-		/*
-		 * By doing this, the element "New Editor" in the context menu is
-		 * disabled.
-		 */
-		return false;
-	}
+    public boolean isEnabled() {
+	/*
+	 * By doing this, the element "New Editor" in the context menu is
+	 * disabled.
+	 */
+	return false;
+    }
 }

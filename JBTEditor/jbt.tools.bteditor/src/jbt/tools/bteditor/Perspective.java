@@ -24,20 +24,23 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 public class Perspective implements IPerspectiveFactory {
-	private static final String RIGHT_FOLDER_ID = "RightFolder";
-	private static final String BOTTOM_RIGHT_FOLDER_ID = "BottomRightFolder";
+    private static final String RIGHT_FOLDER_ID = "RightFolder";
+    private static final String BOTTOM_RIGHT_FOLDER_ID = "BottomRightFolder";
 
-	public void createInitialLayout(IPageLayout layout) {
-		layout.setEditorAreaVisible(true);
+    public void createInitialLayout(IPageLayout layout) {
+	layout.setEditorAreaVisible(true);
 
-		layout.addView(NodesNavigator.ID, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
+	layout.addView(NodesNavigator.ID, IPageLayout.LEFT, 0.3f,
+		layout.getEditorArea());
 
-		IFolderLayout rightFolderLayout = layout.createFolder(RIGHT_FOLDER_ID, IPageLayout.RIGHT,
-				0.6f, layout.getEditorArea());
-		
-		IFolderLayout bottomRightFolderLayout=layout.createFolder(BOTTOM_RIGHT_FOLDER_ID, IPageLayout.BOTTOM, 0.5f, RIGHT_FOLDER_ID);
-		
-		rightFolderLayout.addView(NodeInfo.ID);
-		bottomRightFolderLayout.addView(NodesSearcher.ID);
-	}
+	IFolderLayout rightFolderLayout = layout.createFolder(RIGHT_FOLDER_ID,
+		IPageLayout.RIGHT, 0.6f, layout.getEditorArea());
+
+	IFolderLayout bottomRightFolderLayout = layout.createFolder(
+		BOTTOM_RIGHT_FOLDER_ID, IPageLayout.BOTTOM, 0.5f,
+		RIGHT_FOLDER_ID);
+
+	rightFolderLayout.addView(NodeInfo.ID);
+	bottomRightFolderLayout.addView(NodesSearcher.ID);
+    }
 }

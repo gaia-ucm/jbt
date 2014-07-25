@@ -42,68 +42,73 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * 
  */
 public class DialogExportAsCppAction extends Action implements IWorkbenchAction {
-	private IWorkbenchWindow window;
+    private IWorkbenchWindow window;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param window the main window.
-	 */
-	public DialogExportAsCppAction(IWorkbenchWindow window) {
-		this.window = window;
-		this.setText("Export BT to an inline file");
-		this.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, IconsPaths.INL));
-	}
+    /**
+     * Constructor.
+     * 
+     * @param window
+     *            the main window.
+     */
+    public DialogExportAsCppAction(IWorkbenchWindow window) {
+	this.window = window;
+	this.setText("Export BT to an inline file");
+	this.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+		Application.PLUGIN_ID, IconsPaths.INL));
+    }
 
-	/**
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	public void run() {
-		
-		BTEditor myEditor = Utilities.getActiveBTEditor();	
-		if (myEditor==null || !myEditor.checkTree())
-		{
-			StandardDialogs.errorDialog("Tree not saved",
-					"Errors were detected while validating the tree");
+    /**
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    public void run() {
+
+	BTEditor myEditor = Utilities.getActiveBTEditor();
+	if (myEditor == null || !myEditor.checkTree()) {
+	    StandardDialogs.errorDialog("Tree not saved",
+		    "Errors were detected while validating the tree");
+	} else {
+	    /*
+	     * Open dialog for asking the user to enter some file names.
+	     */
+	    FileDialog dialog = new FileDialog(this.window.getShell(), SWT.SAVE);
+	    String[] individualFilters = Extensions
+		    .getFiltersFromExtensions(Extensions.getInlFileExtensions());
+	    String[] unifiedFilter = new String[] { Extensions
+		    .getUnifiedFilterFromExtensions(Extensions
+			    .getInlFileExtensions()) };
+	    String[] filtersToUse = Extensions.joinArrays(individualFilters,
+		    unifiedFilter);
+	    dialog.setFilterExtensions(filtersToUse);
+	    dialog.setText("Export BT to an inline file");
+
+	    String fileName = dialog.open();
+
+	    if (fileName != null) {
+		List<BTEditor> editors = Utilities.getBTEditors();
+
+		for (BTEditor editor : editors) {
+		    BTEditorInput editorInput = (BTEditorInput) editor
+			    .getEditorInput();
+		    if (editorInput.isFromFile()
+			    && editorInput.getTreeName().equals(fileName)) {
+			throw new RuntimeException(
+				"There is a behaviour tree already open with the same name ("
+					+ fileName + "). Close it first.");
+		    }
 		}
-		else
-		{
-			/*
-			 * Open dialog for asking the user to enter some file names.
-			 */
-			FileDialog dialog = new FileDialog(this.window.getShell(), SWT.SAVE);
-			String[] individualFilters = Extensions.getFiltersFromExtensions(Extensions.getInlFileExtensions());
-			String[] unifiedFilter = new String[] { Extensions.getUnifiedFilterFromExtensions(Extensions.getInlFileExtensions()) };
-			String[] filtersToUse = Extensions.joinArrays(individualFilters, unifiedFilter);
-			dialog.setFilterExtensions(filtersToUse);
-			dialog.setText("Export BT to an inline file");
-			
-			String fileName = dialog.open();
-			
-			if (fileName != null)
-			{
-				List<BTEditor> editors = Utilities.getBTEditors();
-	
-				for (BTEditor editor : editors) {
-					BTEditorInput editorInput = (BTEditorInput) editor.getEditorInput();
-					if (editorInput.isFromFile() && editorInput.getTreeName().equals(fileName)) {
-						throw new RuntimeException(
-								"There is a behaviour tree already open with the same name ("
-										+ fileName + "). Close it first.");
-					}
-				}
-					
-				String targetFileName = Extensions.joinFileNameAndExtension(fileName,
-						Extensions.getInlFileExtensions()[dialog.getFilterIndex()]);
-				
-				BT tree = Utilities.getActiveBTEditor().getBT();
-				
-				new ExportToCppAction(tree, targetFileName).run();
-			}
-		}
-	}
 
-	public void dispose() {
+		String targetFileName = Extensions.joinFileNameAndExtension(
+			fileName, Extensions.getInlFileExtensions()[dialog
+				.getFilterIndex()]);
+
+		BT tree = Utilities.getActiveBTEditor().getBT();
+
+		new ExportToCppAction(tree, targetFileName).run();
+	    }
 	}
+    }
+
+    public void dispose() {
+    }
 }

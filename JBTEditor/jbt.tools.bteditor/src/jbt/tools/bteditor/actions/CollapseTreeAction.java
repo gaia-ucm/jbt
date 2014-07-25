@@ -20,12 +20,12 @@ import jbt.tools.bteditor.editor.BTEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 
-public class CollapseTreeAction extends EditorActionDelegate{
-	public void run(IAction action) {
-		((BTEditor)this.getEditor()).expandTree(false);
-	}
+public class CollapseTreeAction extends EditorActionDelegate {
+    public void run(IAction action) {
+	((BTEditor) this.getEditor()).expandTree(false);
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
+    public void selectionChanged(IAction action, ISelection selection) {
 
-	}
+    }
 }

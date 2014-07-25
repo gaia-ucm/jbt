@@ -50,232 +50,235 @@ import org.eclipse.ui.IPersistableElement;
  * 
  */
 public class BTEditorInput implements IEditorInput {
-	/**
-	 * Name of the tree. If {@link #isFromFile} is true, then it represents the
-	 * name of the file that contains the tree that will be loaded when opening
-	 * the editor.
-	 */
-	private String treeName;
-	/** Flag that indicates if the tree comes from a file or not. */
-	private boolean isFromFile;
-	/** Flag that indicates if the tree comes from a guard. */
-	private boolean isFromGuard;
-	/** The ID of the editor associated to this guard. */
-	private long editorID;
-	/**
-	 * In case the tree comes from a guard, this stores the name and tooltip
-	 * returned by {@link #getName()} and {@link #getToolTipText()}.
-	 */
-	private String guardsName;
+    /**
+     * Name of the tree. If {@link #isFromFile} is true, then it represents the
+     * name of the file that contains the tree that will be loaded when opening
+     * the editor.
+     */
+    private String treeName;
+    /** Flag that indicates if the tree comes from a file or not. */
+    private boolean isFromFile;
+    /** Flag that indicates if the tree comes from a guard. */
+    private boolean isFromGuard;
+    /** The ID of the editor associated to this guard. */
+    private long editorID;
+    /**
+     * In case the tree comes from a guard, this stores the name and tooltip
+     * returned by {@link #getName()} and {@link #getToolTipText()}.
+     */
+    private String guardsName;
 
-	/**
-	 * Constructor. Constructs a new BTEditorInput for opening a BTEditor. The
-	 * behaviour tree that is loaded into the BTEditor depends on the
-	 * BTEditorInput. Actually, a behaviour tree may have three different
-	 * origins:
-	 * 
-	 * <ul>
-	 * <li>New behaviour tree, in which case the tree is created from scratch
-	 * (it is a new empty tree), <code>treeName</code> is the name of the tree,
-	 * <code>isFromFile</code> must be false and <code>isFromGuard</code> must
-	 * be false.
-	 * <li>From a file, in which case <code>treeName</code> is used as the name
-	 * of the file that contains the tree, <code>isFromFile</code> must be true
-	 * and <code>isFromGuard</code> must be false.
-	 * <li>From a node's guard, in which case <code>treeName</code> must be the
-	 * ID of the editor (see {@link BTEditorIDGenerator}) that contains the tree
-	 * that contains the guard, followed by the {@link File#separatorChar},
-	 * followed by the ID of the node that contains such guard. For instance, on
-	 * Windows, a valid name would be "23;Node_17". <code>isFromFile</code> must
-	 * be false and <code>isFromGuard</code> must be true.
-	 * </ul>
-	 * 
-	 * 
-	 * @param treeName
-	 *            the name of the tree.
-	 * @param isFromFile
-	 *            true if the tree must be loaded from a file, and false
-	 *            otherwise. Note that <code>isFromFile</code> and
-	 *            <code>isFromGuard</code> cannot be both true.
-	 * @param isFromGuard
-	 *            true if the tree comes from a guard, and false otherwise. Note
-	 *            that <code>isFromFile</code> and <code>isFromGuard</code>
-	 *            cannot be both true.
-	 */
-	public BTEditorInput(String treeName, boolean isFromFile, boolean isFromGuard) {
-		this.treeName = treeName;
-		this.isFromFile = isFromFile;
-		this.isFromGuard = isFromGuard;
+    /**
+     * Constructor. Constructs a new BTEditorInput for opening a BTEditor. The
+     * behaviour tree that is loaded into the BTEditor depends on the
+     * BTEditorInput. Actually, a behaviour tree may have three different
+     * origins:
+     * 
+     * <ul>
+     * <li>New behaviour tree, in which case the tree is created from scratch
+     * (it is a new empty tree), <code>treeName</code> is the name of the tree,
+     * <code>isFromFile</code> must be false and <code>isFromGuard</code> must
+     * be false.
+     * <li>From a file, in which case <code>treeName</code> is used as the name
+     * of the file that contains the tree, <code>isFromFile</code> must be true
+     * and <code>isFromGuard</code> must be false.
+     * <li>From a node's guard, in which case <code>treeName</code> must be the
+     * ID of the editor (see {@link BTEditorIDGenerator}) that contains the tree
+     * that contains the guard, followed by the {@link File#separatorChar},
+     * followed by the ID of the node that contains such guard. For instance, on
+     * Windows, a valid name would be "23;Node_17". <code>isFromFile</code> must
+     * be false and <code>isFromGuard</code> must be true.
+     * </ul>
+     * 
+     * 
+     * @param treeName
+     *            the name of the tree.
+     * @param isFromFile
+     *            true if the tree must be loaded from a file, and false
+     *            otherwise. Note that <code>isFromFile</code> and
+     *            <code>isFromGuard</code> cannot be both true.
+     * @param isFromGuard
+     *            true if the tree comes from a guard, and false otherwise. Note
+     *            that <code>isFromFile</code> and <code>isFromGuard</code>
+     *            cannot be both true.
+     */
+    public BTEditorInput(String treeName, boolean isFromFile,
+	    boolean isFromGuard) {
+	this.treeName = treeName;
+	this.isFromFile = isFromFile;
+	this.isFromGuard = isFromGuard;
 
-		if (this.isFromFile == this.isFromGuard && this.isFromFile) {
-			throw new RuntimeException("A tree cannot come both from a file and from a guard");
-		}
-
-		this.editorID = BTEditorIDGenerator.getInstance().getNextID();
-
-		if (this.isFromGuard) {
-			String[] pieces = this.treeName.split(File.pathSeparator);
-			BTEditor editor = Utilities.getBTEditor(Long.parseLong(pieces[0]));
-			this.guardsName = "Guard of " + pieces[1] + " in "
-					+ ((BTEditorInput) editor.getEditorInput()).getName();
-		}
+	if (this.isFromFile == this.isFromGuard && this.isFromFile) {
+	    throw new RuntimeException(
+		    "A tree cannot come both from a file and from a guard");
 	}
 
-	/**
-	 * Returns the name of the tree.
-	 * <p>
-	 * If {@link #isFromFile()} is true, this name is the name of the file that
-	 * contains the tree.
-	 * <p>
-	 * If {@link #isFromGuard()} is true, this is the ID of the editor (see
-	 * {@link BTEditorIDGenerator}) that contains the tree that contains the
-	 * guard, followed by the {@link File#separatorChar}, followed by the ID of
-	 * the node that contains such guard.
-	 * 
-	 */
-	public String getTreeName() {
-		return this.treeName;
+	this.editorID = BTEditorIDGenerator.getInstance().getNextID();
+
+	if (this.isFromGuard) {
+	    String[] pieces = this.treeName.split(File.pathSeparator);
+	    BTEditor editor = Utilities.getBTEditor(Long.parseLong(pieces[0]));
+	    this.guardsName = "Guard of " + pieces[1] + " in "
+		    + ((BTEditorInput) editor.getEditorInput()).getName();
+	}
+    }
+
+    /**
+     * Returns the name of the tree.
+     * <p>
+     * If {@link #isFromFile()} is true, this name is the name of the file that
+     * contains the tree.
+     * <p>
+     * If {@link #isFromGuard()} is true, this is the ID of the editor (see
+     * {@link BTEditorIDGenerator}) that contains the tree that contains the
+     * guard, followed by the {@link File#separatorChar}, followed by the ID of
+     * the node that contains such guard.
+     * 
+     */
+    public String getTreeName() {
+	return this.treeName;
+    }
+
+    /**
+     * Sets the name of the tree.
+     * <p>
+     * If {@link #isFromFile()} is true, this name must be the name of the file
+     * that contains the tree.
+     * <p>
+     * If {@link #isFromGuard()} is true, this must be the ID of the editor (see
+     * {@link BTEditorIDGenerator}) that contains the tree that contains the
+     * guard, followed by the {@link File#separatorChar}, followed by the ID of
+     * the node that contains such guard.
+     */
+    public void setTreeName(String treeName) {
+	this.treeName = treeName;
+    }
+
+    /**
+     * Returns if the tree comes from a file.
+     */
+    public boolean isFromFile() {
+	return this.isFromFile;
+    }
+
+    /**
+     * Sets if the tree comes from a file.
+     */
+    public void setIsFromFile(boolean isFromFile) {
+	this.isFromFile = isFromFile;
+    }
+
+    /**
+     * Returns true if the tree comes from a guard, and false otherwise.
+     */
+    public boolean isFromGuard() {
+	return isFromGuard;
+    }
+
+    /**
+     * Sets if the tree comes from a guard.
+     */
+    public void setIsFromGuard(boolean isFromGuard) {
+	this.isFromGuard = isFromGuard;
+    }
+
+    /**
+     * Returns the ID of the BTEditor managed by this BTEditorInput.
+     */
+    public long getEditorID() {
+	return this.editorID;
+    }
+
+    /**
+     * 
+     * @see org.eclipse.ui.IEditorInput#exists()
+     */
+    public boolean exists() {
+	return false;
+    }
+
+    /**
+     * 
+     * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
+     */
+    public ImageDescriptor getImageDescriptor() {
+	return null;
+    }
+
+    /**
+     * <ul>
+     * <li>If {@link #isFromFile()} is true, then returns the short version of
+     * the file returned by {@link #getTreeName()}..
+     * <li>If {@link #isFromGuard()} is true, returns
+     * <code>Guard of XXXX in YYYY</code>, where <code>XXXX</code> is the ID of
+     * the guard the tree comes from, and <code>YYYY</code> is the name of the
+     * tree (as obtained by this {@link #getName()}) that contains the guard.
+     * <li>If both are false, then returns {@link #getTreeName()}.
+     * 
+     * @see org.eclipse.ui.IEditorInput#getName()
+     */
+    public String getName() {
+	if (this.isFromFile) {
+	    File f = new File(this.treeName);
+	    return f.getName();
+	} else if (this.isFromGuard) {
+	    return this.guardsName;
+	} else {
+	    return this.treeName;
+	}
+    }
+
+    /**
+     * 
+     * @see org.eclipse.ui.IEditorInput#getPersistable()
+     */
+    public IPersistableElement getPersistable() {
+	return null;
+    }
+
+    /**
+     * If {@link #isFromFile()} is false or {@link #isFromGuard()} is false,
+     * this method returns {@link #getTreeName()}. If {@link #isFromGuard()} is
+     * true, returns {@link #getName()}.
+     * 
+     * @see org.eclipse.ui.IEditorInput#getToolTipText()
+     */
+    public String getToolTipText() {
+	if (this.isFromGuard) {
+	    return getName();
+	}
+	return getTreeName();
+    }
+
+    /**
+     * 
+     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+     */
+    public Object getAdapter(Class adapter) {
+	return null;
+    }
+
+    /**
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equals(Object o) {
+	if (o == this) {
+	    return true;
 	}
 
-	/**
-	 * Sets the name of the tree.
-	 * <p>
-	 * If {@link #isFromFile()} is true, this name must be the name of the file
-	 * that contains the tree.
-	 * <p>
-	 * If {@link #isFromGuard()} is true, this must be the ID of the editor (see
-	 * {@link BTEditorIDGenerator}) that contains the tree that contains the
-	 * guard, followed by the {@link File#separatorChar}, followed by the ID of
-	 * the node that contains such guard.
-	 */
-	public void setTreeName(String treeName) {
-		this.treeName = treeName;
+	if (!(o instanceof BTEditorInput)) {
+	    return false;
 	}
 
-	/**
-	 * Returns if the tree comes from a file.
-	 */
-	public boolean isFromFile() {
-		return this.isFromFile;
+	BTEditorInput input = (BTEditorInput) o;
+
+	if (this.treeName.equals(input.treeName)
+		&& (this.isFromFile == input.isFromFile)
+		&& (this.isFromGuard == input.isFromGuard)) {
+	    return true;
 	}
 
-	/**
-	 * Sets if the tree comes from a file.
-	 */
-	public void setIsFromFile(boolean isFromFile) {
-		this.isFromFile = isFromFile;
-	}
-
-	/**
-	 * Returns true if the tree comes from a guard, and false otherwise.
-	 */
-	public boolean isFromGuard() {
-		return isFromGuard;
-	}
-
-	/**
-	 * Sets if the tree comes from a guard.
-	 */
-	public void setIsFromGuard(boolean isFromGuard) {
-		this.isFromGuard = isFromGuard;
-	}
-
-	/**
-	 * Returns the ID of the BTEditor managed by this BTEditorInput.
-	 */
-	public long getEditorID() {
-		return this.editorID;
-	}
-
-	/**
-	 * 
-	 * @see org.eclipse.ui.IEditorInput#exists()
-	 */
-	public boolean exists() {
-		return false;
-	}
-
-	/**
-	 * 
-	 * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
-	 */
-	public ImageDescriptor getImageDescriptor() {
-		return null;
-	}
-
-	/**
-	 * <ul>
-	 * <li>If {@link #isFromFile()} is true, then returns the short version of
-	 * the file returned by {@link #getTreeName()}..
-	 * <li>If {@link #isFromGuard()} is true, returns
-	 * <code>Guard of XXXX in YYYY</code>, where <code>XXXX</code> is the ID of
-	 * the guard the tree comes from, and <code>YYYY</code> is the name of the
-	 * tree (as obtained by this {@link #getName()}) that contains the guard.
-	 * <li>If both are false, then returns {@link #getTreeName()}.
-	 * 
-	 * @see org.eclipse.ui.IEditorInput#getName()
-	 */
-	public String getName() {
-		if (this.isFromFile) {
-			File f = new File(this.treeName);
-			return f.getName();
-		} else if (this.isFromGuard) {
-			return this.guardsName;
-		} else {
-			return this.treeName;
-		}
-	}
-
-	/**
-	 * 
-	 * @see org.eclipse.ui.IEditorInput#getPersistable()
-	 */
-	public IPersistableElement getPersistable() {
-		return null;
-	}
-
-	/**
-	 * If {@link #isFromFile()} is false or {@link #isFromGuard()} is false,
-	 * this method returns {@link #getTreeName()}. If {@link #isFromGuard()} is
-	 * true, returns {@link #getName()}.
-	 * 
-	 * @see org.eclipse.ui.IEditorInput#getToolTipText()
-	 */
-	public String getToolTipText() {
-		if (this.isFromGuard) {
-			return getName();
-		}
-		return getTreeName();
-	}
-
-	/**
-	 * 
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class adapter) {
-		return null;
-	}
-
-	/**
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object o) {
-		if (o == this) {
-			return true;
-		}
-
-		if (!(o instanceof BTEditorInput)) {
-			return false;
-		}
-
-		BTEditorInput input = (BTEditorInput) o;
-
-		if (this.treeName.equals(input.treeName) && (this.isFromFile == input.isFromFile)
-				&& (this.isFromGuard == input.isFromGuard)) {
-			return true;
-		}
-
-		return false;
-	}
+	return false;
+    }
 }

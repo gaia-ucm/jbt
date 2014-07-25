@@ -34,36 +34,36 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * 
  */
 public class NewBTAction extends Action {
-	/** Integer used for generating names for the trees that are created. */
-	private static int currentTreeNumber = 1;
+    /** Integer used for generating names for the trees that are created. */
+    private static int currentTreeNumber = 1;
 
-	/**
-	 * Constructor.
-	 */
-	public NewBTAction() {
-		this.setText("New BT");
-		this.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				Application.PLUGIN_ID, IconsPaths.NEW_BT));
+    /**
+     * Constructor.
+     */
+    public NewBTAction() {
+	this.setText("New BT");
+	this.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+		Application.PLUGIN_ID, IconsPaths.NEW_BT));
+    }
+
+    /**
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    public void run() {
+	IWorkbenchPage activePage = PlatformUI.getWorkbench()
+		.getWorkbenchWindows()[0].getActivePage();
+
+	BTEditorInput editorInput = new BTEditorInput("new "
+		+ currentTreeNumber, false, false);
+
+	currentTreeNumber++;
+
+	try {
+	    activePage.openEditor(editorInput, BTEditor.ID);
+	} catch (PartInitException e) {
+	    StandardDialogs.exceptionDialog("Error when creating new tree",
+		    "There was an unexpected error when creating the tree", e);
 	}
-
-	/**
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	public void run() {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench()
-				.getWorkbenchWindows()[0].getActivePage();
-
-		BTEditorInput editorInput = new BTEditorInput("new "
-				+ currentTreeNumber, false, false);
-
-		currentTreeNumber++;
-
-		try {
-			activePage.openEditor(editorInput, BTEditor.ID);
-		} catch (PartInitException e) {
-			StandardDialogs.exceptionDialog("Error when creating new tree",
-					"There was an unexpected error when creating the tree", e);
-		}
-	}
+    }
 }

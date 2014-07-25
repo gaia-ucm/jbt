@@ -20,17 +20,16 @@ import jbt.tools.bteditor.editor.BTEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 
-public class CheckErrorsAction extends EditorActionDelegate{
-	public CheckErrorsAction(){
-		super();
-	}
-	
-	
-	public void run(IAction action) {
-		BTEditor editor=(BTEditor)this.getEditor();
-		editor.checkTree();
-	}
+public class CheckErrorsAction extends EditorActionDelegate {
+    public CheckErrorsAction() {
+	super();
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+    public void run(IAction action) {
+	BTEditor editor = (BTEditor) this.getEditor();
+	editor.checkTree();
+    }
+
+    public void selectionChanged(IAction action, ISelection selection) {
+    }
 }

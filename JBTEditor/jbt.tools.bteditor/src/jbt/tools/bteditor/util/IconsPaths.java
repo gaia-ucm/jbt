@@ -22,18 +22,18 @@ package jbt.tools.bteditor.util;
  * 
  */
 public class IconsPaths {
-	public static final String OPEN_BT = "/icons/openBT.png";
-	public static final String NEW_BT = "/icons/newBT.png";
-	public static final String ROOT = "/icons/root.png";
-	public static final String ACTION = "/icons/action.png";
-	public static final String CATEGORY = "/icons/category.png";
-	public static final String CONDITION = "/icons/condition.png";
-	public static final String LOAD_MMPM_DOMAIN = "/icons/loadMMPMDomain.png";
-	public static final String GUARD = "/icons/guard.png";
-	public static final String BT = "/icons/BT.png";
-	public static final String CPP = "/icons/cpp.png";
-	public static final String INL = "/icons/inl.png";
+    public static final String OPEN_BT = "/icons/openBT.png";
+    public static final String NEW_BT = "/icons/newBT.png";
+    public static final String ROOT = "/icons/root.png";
+    public static final String ACTION = "/icons/action.png";
+    public static final String CATEGORY = "/icons/category.png";
+    public static final String CONDITION = "/icons/condition.png";
+    public static final String LOAD_MMPM_DOMAIN = "/icons/loadMMPMDomain.png";
+    public static final String GUARD = "/icons/guard.png";
+    public static final String BT = "/icons/BT.png";
+    public static final String CPP = "/icons/cpp.png";
+    public static final String INL = "/icons/inl.png";
 
-	private IconsPaths() {
-	}
+    private IconsPaths() {
+    }
 }

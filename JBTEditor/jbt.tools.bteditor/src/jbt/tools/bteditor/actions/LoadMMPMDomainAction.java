@@ -35,47 +35,47 @@ import org.eclipse.ui.IViewPart;
  * 
  */
 public class LoadMMPMDomainAction extends Action {
-	/** Names of the files to open. */
-	private Vector<String> fileNames;
+    /** Names of the files to open. */
+    private Vector<String> fileNames;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param fileNames
-	 *            the names of the files to load.
-	 */
-	public LoadMMPMDomainAction(Vector<String> fileNames) {
-		this.fileNames = fileNames;
-	}
+    /**
+     * Constructor.
+     * 
+     * @param fileNames
+     *            the names of the files to load.
+     */
+    public LoadMMPMDomainAction(Vector<String> fileNames) {
+	this.fileNames = fileNames;
+    }
 
-	/**
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	public void run() {
-		Vector<Exception> exceptions = new Vector<Exception>();
+    /**
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    public void run() {
+	Vector<Exception> exceptions = new Vector<Exception>();
 
-		for (String currentFile : this.fileNames) {
-			try {
-				ConceptualNodesTree newTree = NodesLoader
-						.loadNonStandardNodes(currentFile);
+	for (String currentFile : this.fileNames) {
+	    try {
+		ConceptualNodesTree newTree = NodesLoader
+			.loadNonStandardNodes(currentFile);
 
-				IViewPart view = Utilities.getView(NodesNavigator.class);
+		IViewPart view = Utilities.getView(NodesNavigator.class);
 
-				if (view != null) {
-					NodesNavigator treeView = (NodesNavigator) view;
-					treeView.addTree(newTree);
-				}
-
-			} catch (IOException e) {
-				exceptions.add(e);
-			}
+		if (view != null) {
+		    NodesNavigator treeView = (NodesNavigator) view;
+		    treeView.addTree(newTree);
 		}
 
-		if (exceptions.size() != 0) {
-			StandardDialogs.exceptionDialog("Error loading MMPM domain file",
-					"There were errors when opening MMPM domain files",
-					exceptions);
-		}
+	    } catch (IOException e) {
+		exceptions.add(e);
+	    }
 	}
+
+	if (exceptions.size() != 0) {
+	    StandardDialogs.exceptionDialog("Error loading MMPM domain file",
+		    "There were errors when opening MMPM domain files",
+		    exceptions);
+	}
+    }
 }

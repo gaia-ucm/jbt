@@ -27,60 +27,62 @@ import org.eclipse.swt.graphics.Point;
  * 
  */
 public class OverlayImageIcon extends CompositeImageDescriptor {
-	/**
-	 * Base image of the object
-	 */
-	private Image baseImage;
+    /**
+     * Base image of the object
+     */
+    private Image baseImage;
 
-	/**
-	 * Size of the base image
-	 */
-	private Point sizeOfImage;
+    /**
+     * Size of the base image
+     */
+    private Point sizeOfImage;
 
-	/**
-	 * Decoration
-	 */
-	private Image decoration;
+    /**
+     * Decoration
+     */
+    private Image decoration;
 
-	/**
-	 * Constructor for overlayImageIcon.
-	 */
-	public OverlayImageIcon(Image baseImage, Image decoration) {
-		// Base image of the object
-		this.baseImage = baseImage;
-		// Demo Image Object
-		this.decoration = decoration;
-		this.sizeOfImage = new Point(baseImage.getBounds().width, baseImage.getBounds().height);
-	}
+    /**
+     * Constructor for overlayImageIcon.
+     */
+    public OverlayImageIcon(Image baseImage, Image decoration) {
+	// Base image of the object
+	this.baseImage = baseImage;
+	// Demo Image Object
+	this.decoration = decoration;
+	this.sizeOfImage = new Point(baseImage.getBounds().width,
+		baseImage.getBounds().height);
+    }
 
-	/**
-	 * @see org.eclipse.jface.resource.CompositeImageDescriptor#drawCompositeImage(int,
-	 *      int) DrawCompositeImage is called to draw the composite image.
-	 * 
-	 */
-	protected void drawCompositeImage(int arg0, int arg1) {
-		// Draw the base image
-		drawImage(baseImage.getImageData(), 0, 0);
-		ImageData imageData = decoration.getImageData();
+    /**
+     * @see org.eclipse.jface.resource.CompositeImageDescriptor#drawCompositeImage(int,
+     *      int) DrawCompositeImage is called to draw the composite image.
+     * 
+     */
+    protected void drawCompositeImage(int arg0, int arg1) {
+	// Draw the base image
+	drawImage(baseImage.getImageData(), 0, 0);
+	ImageData imageData = decoration.getImageData();
 
-		// Draw on bottom right corner
-		drawImage(imageData, sizeOfImage.x - imageData.width, sizeOfImage.y - imageData.height);
-	}
+	// Draw on bottom right corner
+	drawImage(imageData, sizeOfImage.x - imageData.width, sizeOfImage.y
+		- imageData.height);
+    }
 
-	/**
-	 * @see org.eclipse.jface.resource.CompositeImageDescriptor#getSize() get
-	 *      the size of the object
-	 */
-	protected Point getSize() {
-		return sizeOfImage;
-	}
+    /**
+     * @see org.eclipse.jface.resource.CompositeImageDescriptor#getSize() get
+     *      the size of the object
+     */
+    protected Point getSize() {
+	return sizeOfImage;
+    }
 
-	/**
-	 * Get the image formed by overlaying different images on the base image
-	 * 
-	 * @return composite image
-	 */
-	public Image getImage() {
-		return createImage();
-	}
+    /**
+     * Get the image formed by overlaying different images on the base image
+     * 
+     * @return composite image
+     */
+    public Image getImage() {
+	return createImage();
+    }
 }

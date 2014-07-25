@@ -38,67 +38,68 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * 
  */
 public class DialogLoadMMPMDomainAction extends Action implements
-		IWorkbenchAction {
-	private IWorkbenchWindow window;
+	IWorkbenchAction {
+    private IWorkbenchWindow window;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param window
-	 *            the main window.
+    /**
+     * Constructor.
+     * 
+     * @param window
+     *            the main window.
+     */
+    public DialogLoadMMPMDomainAction(IWorkbenchWindow window) {
+	this.window = window;
+	this.setText("Load MMPM Domain");
+	this.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+		Application.PLUGIN_ID, IconsPaths.LOAD_MMPM_DOMAIN));
+    }
+
+    /**
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    public void run() {
+	/*
+	 * Open dialog for asking the user to enter some file names.
 	 */
-	public DialogLoadMMPMDomainAction(IWorkbenchWindow window) {
-		this.window = window;
-		this.setText("Load MMPM Domain");
-		this.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				Application.PLUGIN_ID, IconsPaths.LOAD_MMPM_DOMAIN));
+	FileDialog dialog = new FileDialog(this.window.getShell(), SWT.MULTI);
+	String[] individualFilters = Extensions
+		.getFiltersFromExtensions(Extensions
+			.getMMPMDomainFileExtensions());
+	String[] unifiedFilter = new String[] { Extensions
+		.getUnifiedFilterFromExtensions(Extensions
+			.getMMPMDomainFileExtensions()) };
+	String[] filtersToUse = Extensions.joinArrays(individualFilters,
+		unifiedFilter);
+	dialog.setFilterExtensions(filtersToUse);
+	dialog.setText("Open BT");
+
+	if (dialog.open() != null) {
+	    /* Get the name of the files (NOT absolute path). */
+	    String[] singleNames = dialog.getFileNames();
+
+	    /*
+	     * This vector will store the absolute path of every single selected
+	     * file.
+	     */
+	    Vector<String> absolutePath = new Vector<String>();
+
+	    for (int i = 0, n = singleNames.length; i < n; i++) {
+		StringBuffer buffer = new StringBuffer(dialog.getFilterPath());
+		if (buffer.charAt(buffer.length() - 1) != File.separatorChar)
+		    buffer.append(File.separatorChar);
+		buffer.append(singleNames[i]);
+		absolutePath.add(buffer.toString());
+	    }
+
+	    new LoadMMPMDomainAction(absolutePath).run();
 	}
+    }
 
-	/**
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	public void run() {
-		/*
-		 * Open dialog for asking the user to enter some file names.
-		 */
-		FileDialog dialog = new FileDialog(this.window.getShell(), SWT.MULTI);
-		String[] individualFilters = Extensions
-				.getFiltersFromExtensions(Extensions.getMMPMDomainFileExtensions());
-		String[] unifiedFilter = new String[] { Extensions
-				.getUnifiedFilterFromExtensions(Extensions
-						.getMMPMDomainFileExtensions()) };
-		String[] filtersToUse = Extensions.joinArrays(individualFilters,
-				unifiedFilter);
-		dialog.setFilterExtensions(filtersToUse);
-		dialog.setText("Open BT");
-
-		if (dialog.open() != null) {
-			/* Get the name of the files (NOT absolute path). */
-			String[] singleNames = dialog.getFileNames();
-
-			/*
-			 * This vector will store the absolute path of every single selected
-			 * file.
-			 */
-			Vector<String> absolutePath = new Vector<String>();
-
-			for (int i = 0, n = singleNames.length; i < n; i++) {
-				StringBuffer buffer = new StringBuffer(dialog.getFilterPath());
-				if (buffer.charAt(buffer.length() - 1) != File.separatorChar)
-					buffer.append(File.separatorChar);
-				buffer.append(singleNames[i]);
-				absolutePath.add(buffer.toString());
-			}
-
-			new LoadMMPMDomainAction(absolutePath).run();
-		}
-	}
-
-	/**
-	 * 
-	 * @see org.eclipse.ui.actions.ActionFactory.IWorkbenchAction#dispose()
-	 */
-	public void dispose() {
-	}
+    /**
+     * 
+     * @see org.eclipse.ui.actions.ActionFactory.IWorkbenchAction#dispose()
+     */
+    public void dispose() {
+    }
 }

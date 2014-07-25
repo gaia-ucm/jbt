@@ -26,21 +26,21 @@ import jbt.tools.bteditor.model.BT;
  * 
  */
 public class TreeModifiedEvent extends EventObject {
-	private static final long serialVersionUID = 1L;
-	private BT tree;
+    private static final long serialVersionUID = 1L;
+    private BT tree;
 
-	/**
-	 * Constructor. Must specify the tree that has been modified.
-	 */
-	public TreeModifiedEvent(Object source, BT tree) {
-		super(source);
-		this.tree = tree;
-	}
+    /**
+     * Constructor. Must specify the tree that has been modified.
+     */
+    public TreeModifiedEvent(Object source, BT tree) {
+	super(source);
+	this.tree = tree;
+    }
 
-	/**
-	 * Returns the tree that has been modified.
-	 */
-	public BT getTree() {
-		return this.tree;
-	}
+    /**
+     * Returns the tree that has been modified.
+     */
+    public BT getTree() {
+	return this.tree;
+    }
 }

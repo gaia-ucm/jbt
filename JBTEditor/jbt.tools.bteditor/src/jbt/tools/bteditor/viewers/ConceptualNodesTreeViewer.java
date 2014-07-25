@@ -59,166 +59,172 @@ import org.eclipse.swt.widgets.Tree;
  * 
  */
 public class ConceptualNodesTreeViewer extends Composite {
-	/** The TreeViewer that is internally used for displaying the trees. */
-	private TreeViewer treeViewer;
-	/** The trees thar are being displayed. */
-	private List<ConceptualNodesTree> trees;
+    /** The TreeViewer that is internally used for displaying the trees. */
+    private TreeViewer treeViewer;
+    /** The trees thar are being displayed. */
+    private List<ConceptualNodesTree> trees;
 
-	/**
-	 * Constructor.
-	 */
-	public ConceptualNodesTreeViewer(Composite parent, int style) {
-		super(parent, style);
-		this.trees = new Vector<ConceptualNodesTree>();
-		this.setLayout(new FillLayout());
+    /**
+     * Constructor.
+     */
+    public ConceptualNodesTreeViewer(Composite parent, int style) {
+	super(parent, style);
+	this.trees = new Vector<ConceptualNodesTree>();
+	this.setLayout(new FillLayout());
 
-		this.treeViewer = new TreeViewer(this, SWT.SINGLE);
-		Tree treeWidget = (Tree) this.treeViewer.getControl();
-		// treeWidget.setLinesVisible(true);
+	this.treeViewer = new TreeViewer(this, SWT.SINGLE);
+	Tree treeWidget = (Tree) this.treeViewer.getControl();
+	// treeWidget.setLinesVisible(true);
 
-		this.treeViewer.setContentProvider(new BTContentProvider());
-		this.treeViewer.setLabelProvider(new BTLabelProvider());
-		this.treeViewer.setInput(this.trees);
+	this.treeViewer.setContentProvider(new BTContentProvider());
+	this.treeViewer.setLabelProvider(new BTLabelProvider());
+	this.treeViewer.setInput(this.trees);
 
-		/* Drag and drop support. */
-		Transfer[] transfers = new Transfer[] { ConceptualBTNodeTransfer.getInstance() };
-		this.treeViewer.addDragSupport(DND.DROP_MOVE, transfers, new NodesTreeViewerDragListener());
+	/* Drag and drop support. */
+	Transfer[] transfers = new Transfer[] { ConceptualBTNodeTransfer
+		.getInstance() };
+	this.treeViewer.addDragSupport(DND.DROP_MOVE, transfers,
+		new NodesTreeViewerDragListener());
 
-		/* Double click listener for expanding and collapsing categories. */
-		this.treeViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				Object node = ((StructuredSelection) event.getSelection()).getFirstElement();
-				if (node instanceof CategoryItem) {
-					if (treeViewer.getExpandedState(node)) {
-						treeViewer.collapseToLevel(node, 1);
-					} else {
-						treeViewer.expandToLevel(node, 1);
-					}
-				}
-			}
-		});
+	/* Double click listener for expanding and collapsing categories. */
+	this.treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+	    public void doubleClick(DoubleClickEvent event) {
+		Object node = ((StructuredSelection) event.getSelection())
+			.getFirstElement();
+		if (node instanceof CategoryItem) {
+		    if (treeViewer.getExpandedState(node)) {
+			treeViewer.collapseToLevel(node, 1);
+		    } else {
+			treeViewer.expandToLevel(node, 1);
+		    }
+		}
+	    }
+	});
+    }
+
+    /**
+     * Adds a new {@link ConceptualNodesTree} that will be displayed together
+     * with all the trees that were being displayed.
+     */
+    public void addTree(ConceptualNodesTree tree) {
+	this.trees.add(tree);
+	this.treeViewer.refresh();
+    }
+
+    /**
+     * Drag source listener of the tree. It is compatible with
+     * {@link ConceptualBTNodeTransfer}.
+     * 
+     * @author Ricardo Juan Palma Durán
+     * 
+     */
+    private class NodesTreeViewerDragListener implements DragSourceListener {
+	public void dragFinished(DragSourceEvent event) {
 	}
 
-	/**
-	 * Adds a new {@link ConceptualNodesTree} that will be displayed together
-	 * with all the trees that were being displayed.
-	 */
-	public void addTree(ConceptualNodesTree tree) {
-		this.trees.add(tree);
-		this.treeViewer.refresh();
+	public void dragSetData(DragSourceEvent event) {
+	    if (ConceptualBTNodeTransfer.getInstance().isSupportedType(
+		    event.dataType)) {
+		event.data = ((ConceptualBTNodeItem) ((IStructuredSelection) treeViewer
+			.getSelection()).getFirstElement()).getNodeModel();
+	    }
 	}
 
-	/**
-	 * Drag source listener of the tree. It is compatible with
-	 * {@link ConceptualBTNodeTransfer}.
-	 * 
-	 * @author Ricardo Juan Palma Durán
-	 * 
-	 */
-	private class NodesTreeViewerDragListener implements DragSourceListener {
-		public void dragFinished(DragSourceEvent event) {
+	public void dragStart(DragSourceEvent event) {
+	    IStructuredSelection selection = (IStructuredSelection) treeViewer
+		    .getSelection();
+
+	    if (!selection.isEmpty()) {
+		if (selection.getFirstElement() instanceof ConceptualBTNodeItem) {
+		    ConceptualBTNodeItem selectedNode = (ConceptualBTNodeItem) selection
+			    .getFirstElement();
+		    event.doit = true;
+		    return;
 		}
+	    }
 
-		public void dragSetData(DragSourceEvent event) {
-			if (ConceptualBTNodeTransfer.getInstance().isSupportedType(event.dataType)) {
-				event.data = ((ConceptualBTNodeItem) ((IStructuredSelection) treeViewer
-						.getSelection()).getFirstElement()).getNodeModel();
-			}
-		}
+	    event.doit = false;
+	}
+    }
 
-		public void dragStart(DragSourceEvent event) {
-			IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
-
-			if (!selection.isEmpty()) {
-				if (selection.getFirstElement() instanceof ConceptualBTNodeItem) {
-					ConceptualBTNodeItem selectedNode = (ConceptualBTNodeItem) selection
-							.getFirstElement();
-					event.doit = true;
-					return;
-				}
-			}
-
-			event.doit = false;
-		}
+    /**
+     * Contente provider of the tree.
+     * 
+     * @author Ricardo Juan Palma Durán
+     * 
+     */
+    private static class BTContentProvider implements ITreeContentProvider {
+	public Object[] getChildren(Object parentElement) {
+	    if (parentElement instanceof CategoryItem) {
+		CategoryItem category = (CategoryItem) parentElement;
+		return category.getChildren().toArray();
+	    } else {
+		return new Object[] {};
+	    }
 	}
 
-	/**
-	 * Contente provider of the tree.
-	 * 
-	 * @author Ricardo Juan Palma Durán
-	 * 
-	 */
-	private static class BTContentProvider implements ITreeContentProvider {
-		public Object[] getChildren(Object parentElement) {
-			if (parentElement instanceof CategoryItem) {
-				CategoryItem category = (CategoryItem) parentElement;
-				return category.getChildren().toArray();
-			} else {
-				return new Object[] {};
-			}
-		}
-
-		public Object getParent(Object element) {
-			return ((NodesTreeItem) element).getParent();
-		}
-
-		public boolean hasChildren(Object element) {
-			if (element instanceof CategoryItem) {
-				CategoryItem category = (CategoryItem) element;
-				return category.getNumChildren() > 0;
-			} else {
-				return false;
-			}
-		}
-
-		public Object[] getElements(Object inputElement) {
-			List<ConceptualNodesTree> trees = (List<ConceptualNodesTree>) inputElement;
-			Object[] elements = new Object[trees.size()];
-			for (int i = 0; i < trees.size(); i++) {
-				ConceptualNodesTree tree = trees.get(i);
-				elements[i] = tree.getRoots().get(0);
-			}
-			return elements;
-		}
-
-		public void dispose() {
-		}
-
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		}
+	public Object getParent(Object element) {
+	    return ((NodesTreeItem) element).getParent();
 	}
 
-	/**
-	 * Label provider of the tree.
-	 * 
-	 * @author Ricardo Juan Palma Durán
-	 * 
-	 */
-	private static class BTLabelProvider implements ILabelProvider {
-		public Image getImage(Object element) {
-			if (element instanceof CategoryItem) {
-				return ApplicationIcons.getIcon(IconsPaths.CATEGORY);
-			} else {
-				ConceptualBTNodeItem nodeItem = (ConceptualBTNodeItem) element;
-				return ApplicationIcons.getIcon(nodeItem.getNodeModel().getIcon());
-			}
-		}
-
-		public String getText(Object element) {
-			return ((NodesTreeItem) element).getName();
-		}
-
-		public void addListener(ILabelProviderListener listener) {
-		}
-
-		public void dispose() {
-		}
-
-		public boolean isLabelProperty(Object element, String property) {
-			return false;
-		}
-
-		public void removeListener(ILabelProviderListener listener) {
-		}
+	public boolean hasChildren(Object element) {
+	    if (element instanceof CategoryItem) {
+		CategoryItem category = (CategoryItem) element;
+		return category.getNumChildren() > 0;
+	    } else {
+		return false;
+	    }
 	}
+
+	public Object[] getElements(Object inputElement) {
+	    List<ConceptualNodesTree> trees = (List<ConceptualNodesTree>) inputElement;
+	    Object[] elements = new Object[trees.size()];
+	    for (int i = 0; i < trees.size(); i++) {
+		ConceptualNodesTree tree = trees.get(i);
+		elements[i] = tree.getRoots().get(0);
+	    }
+	    return elements;
+	}
+
+	public void dispose() {
+	}
+
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	}
+    }
+
+    /**
+     * Label provider of the tree.
+     * 
+     * @author Ricardo Juan Palma Durán
+     * 
+     */
+    private static class BTLabelProvider implements ILabelProvider {
+	public Image getImage(Object element) {
+	    if (element instanceof CategoryItem) {
+		return ApplicationIcons.getIcon(IconsPaths.CATEGORY);
+	    } else {
+		ConceptualBTNodeItem nodeItem = (ConceptualBTNodeItem) element;
+		return ApplicationIcons.getIcon(nodeItem.getNodeModel()
+			.getIcon());
+	    }
+	}
+
+	public String getText(Object element) {
+	    return ((NodesTreeItem) element).getName();
+	}
+
+	public void addListener(ILabelProviderListener listener) {
+	}
+
+	public void dispose() {
+	}
+
+	public boolean isLabelProperty(Object element, String property) {
+	    return false;
+	}
+
+	public void removeListener(ILabelProviderListener listener) {
+	}
+    }
 }
